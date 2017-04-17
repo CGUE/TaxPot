@@ -1,18 +1,45 @@
 package ac.at.tuwien.mse.taxpot.view;
 
-import android.support.v4.app.FragmentActivity;
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
+import android.location.LocationProvider;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import taxpot.mse.tuwien.at.ac.taxpot.R;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+import ac.at.tuwien.mse.taxpot.R;
+
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
+        OnMyLocationButtonClickListener,
+        ActivityCompat.OnRequestPermissionsResultCallback {
+
+    private GoogleApiClient googleClient;
+
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private boolean hasPermissions = false;
 
     private GoogleMap mMap;
 
@@ -24,25 +51,66 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        googleClient = new GoogleApiClient.Builder(this).addApi(Places.GEO_DATA_API).build();
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        // Add a marker in current position and move the camera
+        LatLng current = new LatLng(48.210033, 16.363449);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
+        mMap.setMinZoomPreference(15.f);
+
+        // activate my location button
+        mMap.setOnMyLocationButtonClickListener(this);
+        enableMyLocation();
+
+    }
+
+    private void enableMyLocation() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+
+        } else if (mMap != null) {
+            hasPermissions = true;
+            mMap.setMyLocationEnabled(true);
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE)
+            return;
+
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.i("TaxPot", "Permission for location granted.");
+            hasPermissions = true;
+        }
+    }
+
+    @Override
+    @SuppressWarnings({"MissingPermission"})
+    public boolean onMyLocationButtonClick() {
+        if (mMap == null)
+            return false;
+
+        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+
+        if (!hasPermissions) {
+            enableMyLocation();
+            return false;
+        }
+
+        Location location = manager.getLastKnownLocation(manager.getBestProvider(criteria, false));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
+
+        return false;
     }
 }
