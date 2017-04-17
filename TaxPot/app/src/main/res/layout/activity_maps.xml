@@ -5,4 +5,4 @@
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="taxpot.mse.tuwien.at.ac.taxpot.MapsActivity" />
+    tools:context="ac.at.tuwien.mse.taxpot.MapsActivity" />
