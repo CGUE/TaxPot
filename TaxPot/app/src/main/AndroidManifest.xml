@@ -30,7 +30,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name="ac.at.tuwien.mse.taxpot.MapsActivity"
+            android:name="ac.at.tuwien.mse.taxpot.view.MapsActivity"
             android:label="@string/title_activity_maps">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
