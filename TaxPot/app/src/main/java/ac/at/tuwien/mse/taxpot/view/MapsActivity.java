@@ -1,6 +1,8 @@
 package ac.at.tuwien.mse.taxpot.view;
 
 import android.Manifest;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -28,6 +30,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import ac.at.tuwien.mse.taxpot.R;
+import ac.at.tuwien.mse.taxpot.fragments.DetailsFragment;
+import ac.at.tuwien.mse.taxpot.service.MarkerDetailService;
 import ac.at.tuwien.mse.taxpot.service.SearchService;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
@@ -36,6 +40,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                                             ActivityCompat.OnRequestPermissionsResultCallback {
 
     private GoogleApiClient googleApiClient;
+    private final String TAG = "TaxPot";
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private boolean hasPermissions = false;
@@ -69,12 +74,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         rlp.setMargins(0, 0, 30, 30);
 
         searchBar = (FloatingSearchView)findViewById(R.id.floating_search_view);
-
-/**
-        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-        autocompleteFragment.setOnPlaceSelectedListener(this);
- **/
     }
 
     @Override
@@ -96,6 +95,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SearchService service = new SearchService(googleApiClient, mMap, searchBar);
         searchBar.setOnQueryChangeListener(service);
         searchBar.setOnSearchListener(service);
+
+        mMap.setOnMarkerClickListener(new MarkerDetailService(this));
     }
 
     private void enableMyLocation() {
@@ -146,7 +147,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d("TaxPot", "Connection with google services failed!");
+        Log.d(TAG, "Connection with google services failed!");
     }
 
+    @Override
+    public void onBackPressed() {
+        if(getFragmentManager().getBackStackEntryCount() > 0){
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

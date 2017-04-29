@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_container"
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        app:cardBackgroundColor="@color/white">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/header_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/taxpot_yellow"
+                app:cardElevation="@dimen/header_elevation">
+
+                <RelativeLayout
+                    android:id="@+id/header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/detail_fragment_marginLeft">
+
+                    <TextView
+                        android:id="@+id/streetName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:text="StreetName"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/detailfragment_header" />
+
+                    <TextView
+                        android:id="@+id/parkingSpace"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/streetName"
+                        android:text="@string/stellenplatzanzahl" />
+
+                    <TextView
+                        android:id="@+id/serviceTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignEnd="@+id/parkingSpace"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignRight="@+id/parkingSpace"
+                        android:layout_below="@+id/parkingSpace"
+                        android:text="@string/zeitraum" />
+
+                    <TextView
+                        android:id="@+id/parkingSpaceValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/parkingSpace"
+                        android:layout_alignBottom="@+id/parkingSpace"
+                        android:layout_marginLeft="@dimen/detail_fragment_marginLeft"
+                        android:layout_toEndOf="@+id/parkingSpace"
+                        android:layout_toRightOf="@+id/parkingSpace"
+                        android:text="calculated number" />
+
+                    <TextView
+                        android:id="@+id/serviceTimeValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/serviceTime"
+                        android:layout_alignBottom="@+id/serviceTime"
+                        android:layout_marginLeft="@dimen/detail_fragment_marginLeft"
+                        android:layout_toEndOf="@+id/serviceTime"
+                        android:layout_toRightOf="@+id/serviceTime"
+                        android:text="retrieved value" />
+
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+            <LinearLayout
+                android:id="@+id/ratings_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/button4"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/header_container"
+                android:layout_marginLeft="@dimen/detail_fragment_marginLeft"
+                android:layout_marginRight="@dimen/detail_fragment_marginLeft"
+                android:layout_marginTop="@dimen/detail_fragment_marginLeft"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="entries here" />
+
+                <TextView
+                    android:id="@+id/textView14"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="entries here" />
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="entries here" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:text="@string/rate_button"
+                android:textSize="@dimen/detailfragment_text" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>

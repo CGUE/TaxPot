@@ -20,6 +20,8 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -28,6 +30,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import ac.at.tuwien.mse.taxpot.R;
 
 /**
  * Created by markj on 4/20/2017.
@@ -63,6 +67,8 @@ public class SearchService implements FloatingSearchView.OnQueryChangeListener,
                                                                     new AutocompleteFilter.Builder()
                                                                             .setTypeFilter(AutocompleteFilter.TYPE_FILTER_NONE).setCountry("AT").build());
 
+        if(positionMarker != null)
+            positionMarker.hideInfoWindow();
 
         results.setResultCallback(new OnResultCallback());
     }
@@ -81,7 +87,10 @@ public class SearchService implements FloatingSearchView.OnQueryChangeListener,
 
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(place.getLatLng()));
                     if(positionMarker == null)
-                        positionMarker = mMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName().toString()));
+                        positionMarker = mMap.addMarker(new MarkerOptions()
+                                                        .position(place.getLatLng())
+                                                        .title(place.getName().toString())
+                                                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_taxpot)));
 
                     positionMarker.setPosition(place.getLatLng());
                     positionMarker.setTitle(place.getName().toString());

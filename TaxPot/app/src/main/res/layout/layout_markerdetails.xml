@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        app:cardBackgroundColor="@color/cardview_light_background"
+        app:cardElevation="24dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/taxpot_yellow"
+                app:cardElevation="@dimen/header_elevation">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_margin="@dimen/square_button_padding"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:text="StreetName"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/detailfragment_header" />
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:id="@+id/starrating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/header"
+                android:layout_marginLeft="@dimen/square_button_padding"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="StarRating"
+                android:textSize="@dimen/detailfragment_text" />
+
+            <TextView
+                android:id="@+id/rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/starrating"
+                android:layout_alignBottom="@+id/starrating"
+                android:layout_marginLeft="@dimen/square_button_padding"
+                android:layout_toEndOf="@+id/starrating"
+                android:layout_toRightOf="@+id/starrating"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Rating"
+                android:textSize="@dimen/detailfragment_text" />
+
+            <TextView
+                android:id="@+id/distance_in_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/starrating"
+                android:layout_marginLeft="@dimen/square_button_padding"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="DistanceInMin"
+                android:textSize="@dimen/detailfragment_text" />
+
+            <Button
+                android:id="@+id/rating_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/comment_button"
+                android:layout_toLeftOf="@+id/comment_button"
+                android:layout_toStartOf="@+id/comment_button"
+                android:text="@string/rating_button"
+                android:textSize="@dimen/detailfragment_text" />
+
+            <Button
+                android:id="@+id/comment_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:text="@string/comment_button"
+                android:textSize="@dimen/detailfragment_text" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>
