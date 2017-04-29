@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
 import ac.at.tuwien.mse.taxpot.R;
@@ -39,7 +41,9 @@ public class DetailsFragment extends Fragment {
                 RatingsFragment ratingsFrag = new RatingsFragment();
 
                 // replace
-                transaction.add(R.id.ratingDetailsFragment_container, ratingsFrag, "RatingsFragment");
+                transaction.setCustomAnimations(R.anim.slide_up,
+                        R.anim.slide_down, 0, 0);
+                transaction.replace(R.id.detailsFragment_container, ratingsFrag, "RatingsFragment");
                 transaction.addToBackStack(null);
 
                 transaction.commit();
@@ -49,15 +53,4 @@ public class DetailsFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
-        int id = enter ? R.animator.slide_up : R.animator.slide_down;
-        final Animator anim = AnimatorInflater.loadAnimator(getActivity(), id);
-        return anim;
-    }
 }

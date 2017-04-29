@@ -40,8 +40,8 @@ public class MarkerDetailService implements GoogleMap.OnMarkerClickListener {
 
         DetailsFragment detailsFrag = new DetailsFragment();
 
-        transaction.setCustomAnimations(R.animator.slide_up, 0, 0,
-                R.animator.slide_down);
+        transaction.setCustomAnimations(R.anim.slide_up,
+                                        R.anim.slide_down, 0, 0);
         transaction.add(R.id.detailsFragment_container, detailsFrag, "DetailsFragment");
         transaction.addToBackStack(null);
         transaction.commit();

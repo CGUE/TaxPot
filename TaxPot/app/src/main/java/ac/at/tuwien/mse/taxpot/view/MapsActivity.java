@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
@@ -26,11 +27,30 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import ac.at.tuwien.mse.taxpot.R;
 import ac.at.tuwien.mse.taxpot.fragments.DetailsFragment;
+import ac.at.tuwien.mse.taxpot.models.TaxPot;
 import ac.at.tuwien.mse.taxpot.service.MarkerDetailService;
 import ac.at.tuwien.mse.taxpot.service.SearchService;
 
@@ -39,15 +59,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                                             OnMyLocationButtonClickListener,
                                                             ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private GoogleApiClient googleApiClient;
     private final String TAG = "TaxPot";
+    private GoogleApiClient googleApiClient;
 
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private boolean hasPermissions = false;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     private GoogleMap mMap;
-    private Marker searchMarker;
     private FloatingSearchView searchBar;
+
+    private Map<Marker, TaxPot> markerData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +95,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         rlp.setMargins(0, 0, 30, 30);
 
         searchBar = (FloatingSearchView)findViewById(R.id.floating_search_view);
+
+        markerData = new HashMap<>();
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        // start initializing markers
+        new StartupTask().execute("");
 
         // Add a marker in current position and move the camera
         LatLng current = new LatLng(48.210033, 16.363449);
@@ -156,6 +182,120 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             getFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
+        }
+    }
+
+    // adds all taxpots to map
+    private boolean taxPotsInitialized(List<TaxPot> results){
+        if(mMap == null){
+            return false;
+        }
+
+        for(TaxPot result : results){
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                            .title(result.getAddress())
+                            .position(result.getLatLng())
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_taxpot)));
+
+            markerData.put(marker, result);
+        }
+        return true;
+    }
+
+    private class StartupTask extends AsyncTask<String, String, Void> {
+
+        private List<TaxPot> results;
+        private String response;
+
+        @Override
+        protected Void doInBackground(String... params) {
+            // TODO: save url in resources
+            final String datagvURL = "http://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:TAXIOGD&srsName=EPSG:4326&outputFormat=json";
+
+            results = new ArrayList<>();
+            HttpURLConnection connection = null;
+            BufferedReader reader = null;
+
+            try {
+                URL url = new URL(datagvURL);
+                connection = (HttpURLConnection) url.openConnection();
+
+                connection.connect();
+
+                InputStream stream = connection.getInputStream();
+
+                reader = new BufferedReader(new InputStreamReader(stream));
+
+                StringBuffer buffer = new StringBuffer();
+                String line = "";
+
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line+"\n");
+                }
+
+                response = buffer.toString();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+                try {
+                    if (reader != null) {
+                        reader.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            try {
+                JSONObject jsonObject = new JSONObject(response);
+                JSONArray features = jsonObject.getJSONArray("features");
+
+                for(int i = 0; i < features.length(); i++){
+                    JSONObject feature = (JSONObject) features.get(i);
+                    JSONObject properties = feature.getJSONObject("properties");
+
+                    JSONObject geometryInfo = feature.getJSONObject("geometry");
+                    JSONArray coordinates = geometryInfo.getJSONArray("coordinates");
+                    JSONArray latLngInfo = coordinates.getJSONArray(0);
+
+                    TaxPot spot = new TaxPot();
+                    if(properties.get("ADRESSE") != null)
+                        spot.setAddress(properties.getString("ADRESSE"));
+
+                    if(latLngInfo != null)
+                        spot.setLatLng(new LatLng(latLngInfo.getDouble(1), latLngInfo.getDouble(0)));
+
+                    if(properties.get("ZEITRAUM") != null)
+                        spot.setServiceTime(properties.getString("ZEITRAUM"));
+
+                    if(properties.get("STELLPLATZANZAHL") != null)
+                        spot.setParkingSpace(properties.getString("STELLPLATZANZAHL"));
+
+                    results.add(spot);
+                }
+                executeUpdate();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void executeUpdate(){
+            if(!taxPotsInitialized(results))
+                executeUpdate();
         }
     }
 }
