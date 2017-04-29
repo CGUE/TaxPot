@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -68,6 +69,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private FloatingSearchView searchBar;
 
+    private ClusterManager<TaxPot> taxPotClusterManager;
     private Map<Marker, TaxPot> markerData;
 
     @Override
@@ -122,7 +124,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         searchBar.setOnQueryChangeListener(service);
         searchBar.setOnSearchListener(service);
 
-        mMap.setOnMarkerClickListener(new MarkerDetailService(this));
+        // initialize clustermanager
+        taxPotClusterManager = new ClusterManager<TaxPot>(this, mMap);
+        taxPotClusterManager.setOnClusterItemClickListener(new MarkerDetailService(this));
+
+        mMap.setOnMarkerClickListener(taxPotClusterManager);
+        mMap.setOnCameraIdleListener(taxPotClusterManager);
     }
 
     private void enableMyLocation() {
@@ -192,12 +199,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         for(TaxPot result : results){
-            Marker marker = mMap.addMarker(new MarkerOptions()
-                            .title(result.getAddress())
-                            .position(result.getLatLng())
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_taxpot)));
-
-            markerData.put(marker, result);
+//            Marker marker = mMap.addMarker(new MarkerOptions()
+//                            .title(result.getAddress())
+//                            .position(result.getLatLng())
+//                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_taxpot)));
+//
+//            markerData.put(marker, result);
+            taxPotClusterManager.addItem(result);
         }
         return true;
     }

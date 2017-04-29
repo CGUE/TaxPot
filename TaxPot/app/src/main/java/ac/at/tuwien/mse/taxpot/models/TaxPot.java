@@ -1,12 +1,13 @@
 package ac.at.tuwien.mse.taxpot.models;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
 
 /**
  * Created by markj on 4/29/2017.
  */
 
-public class TaxPot {
+public class TaxPot implements ClusterItem{
 
     private String address;
     private LatLng latLng;
@@ -43,5 +44,10 @@ public class TaxPot {
 
     public void setServiceTime(String serviceTime) {
         this.serviceTime = serviceTime;
+    }
+
+    @Override
+    public LatLng getPosition() {
+        return latLng;
     }
 }
