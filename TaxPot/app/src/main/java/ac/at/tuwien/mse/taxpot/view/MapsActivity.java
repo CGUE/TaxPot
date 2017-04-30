@@ -54,6 +54,7 @@ import ac.at.tuwien.mse.taxpot.fragments.DetailsFragment;
 import ac.at.tuwien.mse.taxpot.models.TaxPot;
 import ac.at.tuwien.mse.taxpot.service.MarkerDetailService;
 import ac.at.tuwien.mse.taxpot.service.SearchService;
+import ac.at.tuwien.mse.taxpot.view.CustomCluster.CustomClusterRenderer;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
                                                             GoogleApiClient.OnConnectionFailedListener,
@@ -127,6 +128,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // initialize clustermanager
         taxPotClusterManager = new ClusterManager<TaxPot>(this, mMap);
         taxPotClusterManager.setOnClusterItemClickListener(new MarkerDetailService(this));
+        taxPotClusterManager.setRenderer(new CustomClusterRenderer(getApplicationContext(), mMap, taxPotClusterManager));
 
         mMap.setOnMarkerClickListener(taxPotClusterManager);
         mMap.setOnCameraIdleListener(taxPotClusterManager);
@@ -199,12 +201,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         for(TaxPot result : results){
-//            Marker marker = mMap.addMarker(new MarkerOptions()
-//                            .title(result.getAddress())
-//                            .position(result.getLatLng())
-//                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_taxpot)));
-//
-//            markerData.put(marker, result);
             taxPotClusterManager.addItem(result);
         }
         return true;

@@ -89,8 +89,7 @@ public class SearchService implements FloatingSearchView.OnQueryChangeListener,
                     if(positionMarker == null)
                         positionMarker = mMap.addMarker(new MarkerOptions()
                                                         .position(place.getLatLng())
-                                                        .title(place.getName().toString())
-                                                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_taxpot)));
+                                                        .title(place.getName().toString()));
 
                     positionMarker.setPosition(place.getLatLng());
                     positionMarker.setTitle(place.getName().toString());
