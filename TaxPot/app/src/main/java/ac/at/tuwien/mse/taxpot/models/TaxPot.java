@@ -13,6 +13,9 @@ public class TaxPot implements ClusterItem{
     private LatLng latLng;
     private String parkingSpace;
     private String serviceTime;
+    private double rating =3.5;
+    private int ratingCount = 0;
+    private double allRatings;
 
     public String getAddress() {
         return address;
@@ -49,5 +52,21 @@ public class TaxPot implements ClusterItem{
     @Override
     public LatLng getPosition() {
         return latLng;
+    }
+
+    public double getRating(){
+        return this.rating;
+    }
+
+    public void setRating(double rating){
+        ratingCount++;
+
+        this.rating = rating;
+
+        //TODO: calculate avarage rating here;
+        /*
+        allRatings += rating;
+        this.rating = allRatings/ratingCount;
+        */
     }
 }

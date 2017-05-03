@@ -8,7 +8,7 @@
     <android.support.v7.widget.CardView
         android:id="@+id/card_container"
         android:layout_width="match_parent"
-        android:layout_height="320dp"
+        android:layout_height="400dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -98,59 +98,57 @@
                 android:layout_marginTop="@dimen/detail_fragment_marginLeft"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="271dp"
-                    android:layout_height="wrap_content"
-                    android:text="Freundliche Fahrer" />
-
-                <RatingBar
-                    android:id="@+id/driversRating"
-                    style="@style/Widget.AppCompat.RatingBar.Indicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:numStars="5"
-                    android:rating="3" />
-
-                <TextView
-                    android:id="@+id/textView2"
+                <ScrollView
+                    android:id="@+id/comment_section"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Sicheres Umfeld" />
+                    android:layout_height="match_parent">
 
-                <RatingBar
-                    android:id="@+id/safeRating"
-                    style="@style/Widget.AppCompat.RatingBar.Indicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:numStars="5"
-                    android:rating="4" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Anzahl der Taxis" />
+                        <TextView
+                            android:id="@+id/comment1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="15dp"
+                            android:paddingLeft="20dp"
+                            android:paddingTop="15dp"
+                            android:text="Sichere Gegend, viele Menschen unterwegs. Viele Taxis vorhanden" />
 
-                <RatingBar
-                    android:id="@+id/taxiCountRating"
-                    style="@style/Widget.AppCompat.RatingBar.Indicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:numStars="5"
-                    android:rating="2" />
-
+                        <TextView
+                            android:id="@+id/comment2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="15dp"
+                            android:paddingLeft="20dp"
+                            android:paddingTop="15dp"
+                            android:text="Fahrer sehr nett, sind lustige Gesprächspartner. Warteschlange, falls man am Abend ein Taxi haben will." />
+                    </LinearLayout>
+                </ScrollView>
             </LinearLayout>
 
             <Button
                 android:id="@+id/postCommentBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/comments_container"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:text="@string/rate_button"
+                android:layout_alignRight="@+id/comments_container"
+                android:text="Post"
                 android:textSize="@dimen/detailfragment_text" />
+
+            <TextView
+                android:id="@+id/own_comment"
+                android:layout_width="250dp"
+                android:layout_height="35dp"
+                android:layout_alignLeft="@+id/comments_container"
+                android:layout_alignStart="@+id/comments_container"
+                android:layout_below="@+id/comments_container"
+                android:layout_marginTop="5dp"
+                android:editable="true"
+                android:text="Kommentar hinzufügen" />
 
         </RelativeLayout>
 

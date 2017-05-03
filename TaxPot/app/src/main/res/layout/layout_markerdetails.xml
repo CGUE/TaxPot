@@ -8,11 +8,11 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="160dp"
-        app:cardBackgroundColor="@color/cardview_light_background"
-        app:cardElevation="24dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        app:cardBackgroundColor="@color/cardview_light_background"
+        app:cardElevation="24dp">
 
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"

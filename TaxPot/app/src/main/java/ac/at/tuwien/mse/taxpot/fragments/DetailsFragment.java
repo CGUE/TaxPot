@@ -45,6 +45,11 @@ public class DetailsFragment extends Fragment {
         TextView header = (TextView) view.findViewById(R.id.streetname_header);
         header.setText(taxPot.getAddress());
 
+        //TODO: rating stars here!
+
+        TextView ratingValue = (TextView) view.findViewById(R.id.rating);
+        ratingValue.setText(String.valueOf(taxPot.getRating()));
+
         Button ratingButton = (Button)view.findViewById(R.id.rating_button);
         ratingButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,9 +70,38 @@ public class DetailsFragment extends Fragment {
                 ratingsFrag.setArguments(bundle);
 
                 // replace
-                transaction.setCustomAnimations(R.anim.slide_up,
-                        R.anim.slide_down, 0, 0);
+                transaction.setCustomAnimations(R.animator.slide_up,
+                        R.animator.slide_down, 0, 0);
                 transaction.replace(R.id.detailsFragment_container, ratingsFrag, "RatingsFragment");
+                transaction.addToBackStack(null);
+
+                transaction.commit();
+            }
+        });
+
+        Button commentButton = (Button)view.findViewById(R.id.comment_button);
+        commentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // get FragmentManager and start FragmentTransaction
+                FragmentManager fragmentManager = getFragmentManager();
+
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("adress", taxPot.getAddress());
+                bundle.putDouble("longitude", taxPot.getLatLng().longitude);
+                bundle.putDouble("latitude", taxPot.getLatLng().latitude);
+                bundle.putString("serviceTime", taxPot.getServiceTime());
+                bundle.putString("parkingSpace", taxPot.getParkingSpace());
+
+                CommentsFragment commentsFrag = new CommentsFragment();
+                commentsFrag.setArguments(bundle);
+
+                // replace
+                transaction.setCustomAnimations(R.animator.slide_up,
+                        R.animator.slide_down, 0, 0);
+                transaction.replace(R.id.detailsFragment_container, commentsFrag, "CommentFragment");
                 transaction.addToBackStack(null);
 
                 transaction.commit();

@@ -54,8 +54,8 @@ public class MarkerDetailService implements ClusterManager.OnClusterItemClickLis
         DetailsFragment detailsFrag = new DetailsFragment();
         detailsFrag.setArguments(bundle);
 
-        transaction.setCustomAnimations(R.anim.slide_up,
-                R.anim.slide_down, 0, 0);
+        transaction.setCustomAnimations(R.animator.slide_up,
+                R.animator.slide_down, 0, 0);
         transaction.add(R.id.detailsFragment_container, detailsFrag, "DetailsFragment");
 
         transaction.addToBackStack(null);
