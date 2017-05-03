@@ -273,8 +273,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, "CONNECTION ESTABLISHED!");
         if (hasPermissions) {
             currentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-            LatLng current = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
+            if(currentLocation != null) {
+                LatLng current = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
+            }
         } else {
             LatLng current = new LatLng(48.210033, 16.363449);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
