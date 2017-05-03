@@ -148,7 +148,7 @@
                 tools:ignore="SpUsage" />
 
             <EditText
-                android:id="@+id/editText"
+                android:id="@+id/own_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/comments_container"

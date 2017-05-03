@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
@@ -47,7 +48,7 @@ public class CommentsFragment extends Fragment {
         TextView serviceTimeValue = (TextView) view.findViewById(R.id.serviceTimeValue);
         serviceTimeValue.setText(taxPot.getServiceTime());
 
-        final TextView ownComment = (TextView) view.findViewById(R.id.own_comment);
+        final EditText ownComment = (EditText) view.findViewById(R.id.own_comment);
 
         final ScrollView commentSection = (ScrollView) view.findViewById(R.id.comment_section);
 
