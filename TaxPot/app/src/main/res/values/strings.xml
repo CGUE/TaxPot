@@ -5,9 +5,27 @@
     <string name="comment_button">Kommentare</string>
     <string name="rating_button">Bewertungen</string>
     <string name="rate_button">Bewerten</string>
+    <string name="streetName">StreetName</string>
     <string name="stellenplatzanzahl">Stellenplatzanzahl:</string>
     <string name="zeitraum">Zeitraum:</string>
     <string name="no_entries_found">Kein Eintrag gefunden</string>
+    <string name="driver">Freundliche Fahrer</string>
+    <string name="safe">Sicheres Umfeld</string>
+    <string name="taxiCount">Viele Taxis</string>
+    <string name="day">Tag</string>
+    <string name="night">Night</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="filter">Filter</string>
+    <string name="to_filter">Filtern</string>
+    <string name="post">Post</string>
+    <string name="zero_double">0.0</string>
+
+    <string name="report_title">Neuen Taxistand Melden</string>
+    <string name="address">Adresse</string>
+    <string name="timeframe">Zeitraum</string>
+    <string name="taxiPlaceCount">Stellenplatzanzahl</string>
+    <string name="report_Btn">Melden</string>
+
 
     <string name="on_request_fail_message">Es ist leider ein Fehler aufgetreten.</string>
     <string name="google_directions_url">https://maps.googleapis.com/maps/api/directions/json?</string>

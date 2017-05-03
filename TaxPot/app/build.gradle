@@ -26,10 +26,10 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.1.1'
-    // arimorty floating search view library
     compile 'com.android.support:animated-vector-drawable:25.3.1'
     compile 'com.android.support:customtabs:25.3.1'
     compile 'com.android.support:mediarouter-v7:25.3.1'
+    // arimorty floating search view library
     compile 'com.github.arimorty:floatingsearchview:2.0.4'
 
     // card view library

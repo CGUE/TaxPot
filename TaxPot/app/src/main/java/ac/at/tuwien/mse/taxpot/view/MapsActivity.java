@@ -17,7 +17,13 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -60,6 +66,7 @@ import java.util.Map;
 
 import ac.at.tuwien.mse.taxpot.R;
 import ac.at.tuwien.mse.taxpot.fragments.DetailsFragment;
+import ac.at.tuwien.mse.taxpot.fragments.ReportTaxiFragment;
 import ac.at.tuwien.mse.taxpot.models.TaxPot;
 import ac.at.tuwien.mse.taxpot.service.MarkerDetailService;
 import ac.at.tuwien.mse.taxpot.service.SearchService;
@@ -68,11 +75,10 @@ import ac.at.tuwien.mse.taxpot.utli.PermissionUtils;
 import ac.at.tuwien.mse.taxpot.view.CustomCluster.CustomClusterRenderer;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
-                                                            GoogleApiClient.OnConnectionFailedListener,
-                                                            GoogleApiClient.ConnectionCallbacks,
-                                                            OnMyLocationButtonClickListener,
-                                                            ActivityCompat.OnRequestPermissionsResultCallback {
-
+        GoogleApiClient.OnConnectionFailedListener,
+        GoogleApiClient.ConnectionCallbacks,
+        OnMyLocationButtonClickListener,
+        ActivityCompat.OnRequestPermissionsResultCallback{
     private final String TAG = "TaxPot";
     private GoogleApiClient googleApiClient;
 
@@ -81,6 +87,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private FloatingSearchView searchBar;
+    private View menuItem1;
+
 
     private ClusterManager<TaxPot> taxPotClusterManager;
     private Location currentLocation;
@@ -92,12 +100,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // establish connection with google services
         googleApiClient = new GoogleApiClient.Builder(this)
-                                .addApi(Places.GEO_DATA_API)
-                                .addApi(Places.PLACE_DETECTION_API)
-                                .addApi(LocationServices.API)
-                                .enableAutoManage(this, this)
-                                .addConnectionCallbacks(this)
-                                .build();
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .addApi(LocationServices.API)
+                .enableAutoManage(this, this)
+                .addConnectionCallbacks(this)
+                .build();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -111,7 +119,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
         rlp.setMargins(0, 0, 30, 30);
 
-        searchBar = (FloatingSearchView)findViewById(R.id.floating_search_view);
+        searchBar = (FloatingSearchView) findViewById(R.id.floating_search_view);
+        menuItem1 = findViewById(R.id.menu_item1);
+
+        searchBar.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
+            @Override
+            public void onActionMenuItemSelected(MenuItem item) {
+                onMenuListened(item);
+            }
+        });
     }
 
     @Override
@@ -150,7 +166,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), R.string.on_request_fail_message+": "+error.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.on_request_fail_message + ": " + error.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -168,7 +184,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void parseDatagvResponse(JSONObject json) throws JSONException {
         JSONArray features = json.getJSONArray("features");
 
-        for(int i = 0; i < features.length(); i++) {
+        for (int i = 0; i < features.length(); i++) {
             JSONObject feature = (JSONObject) features.get(i);
             JSONObject properties = feature.getJSONObject("properties");
 
@@ -196,12 +212,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
-    public FloatingSearchView getSearchBar(){
+    public FloatingSearchView getSearchBar() {
         return this.searchBar;
     }
 
-    public Location getCurrentLocation(){
+    public Location getCurrentLocation() {
         return this.currentLocation;
     }
 
@@ -214,7 +229,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
                     Manifest.permission.ACCESS_FINE_LOCATION, true);
 
-        } else if(mMap != null){
+        } else if (mMap != null) {
             hasPermissions = true;
             mMap.setMyLocationEnabled(true);
         }
@@ -247,7 +262,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return false;
 
         currentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        if(currentLocation == null) {
+        if (currentLocation == null) {
             return false;
         }
 
@@ -267,7 +282,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onBackPressed() {
-        if(getFragmentManager().getBackStackEntryCount() > 0){
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
@@ -277,7 +292,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "CONNECTION ESTABLISHED!");
-        if(hasPermissions) {
+        if (hasPermissions) {
             currentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             LatLng current = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
@@ -291,5 +306,61 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onConnectionSuspended(int i) {
 
+    }
+
+    //TODO: make a menuService
+    public void onMenuListened(MenuItem item) {
+        Log.d(TAG, "MenuItem Clicked");
+        if (item.getItemId() == R.id.menu_item1){
+            Log.d(TAG, "Filtern clicked");
+
+            View popupView = LayoutInflater.from(this).inflate(R.layout.layout_filter,null);
+            final PopupWindow popupWindow = new PopupWindow(popupView, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+            popupWindow.showAsDropDown(popupView,0,0);
+
+            Button toFilterBtn = (Button)popupView.findViewById(R.id.toFilter_Btn);
+            toFilterBtn.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    //TODO:
+                    popupWindow.dismiss();
+                }
+            });
+
+            Button cancelBtn = (Button)popupView.findViewById(R.id.cancel_btn);
+            cancelBtn.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    popupWindow.dismiss();
+                }
+            });
+
+        }else if(item.getItemId() == R.id.menu_item2){
+            Log.d(TAG, "Melden clicked");
+
+            // get FragmentManager and start FragmentTransaction
+            FragmentManager fragmentManager = this.getFragmentManager();
+
+            // remove old fragment
+            if(fragmentManager.getBackStackEntryCount() > 0) {
+                Log.d(TAG,"popped backstack");
+                fragmentManager.popBackStack();
+            }
+
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+            final ReportTaxiFragment reportFrag = new ReportTaxiFragment();
+            //reportFrag.setArguments(bundle);
+
+            transaction.setCustomAnimations(R.animator.slide_up,
+                    R.animator.slide_down, 0, 0);
+
+            transaction.add(R.id.reportTaxiFragment_container, reportFrag, "ReportTaxiFragment");
+
+            transaction.addToBackStack("reportTaxiFragment_container");
+
+            transaction.commit();
+
+        }
     }
 }

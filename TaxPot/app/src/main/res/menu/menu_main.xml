@@ -3,7 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:showAsAction="always">
 
-    <item android:id ="@+id/menu_first"
-        android:title="Test entry"/>
+    <item
+        android:id="@+id/menu_item1"
+        android:title="Filtern"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_item2"
+        android:checkable="false"
+        android:enabled="true"
+        android:title="Neuen Stand melden"
+        android:visible="true"
+        app:showAsAction="always" />
 
 </menu>

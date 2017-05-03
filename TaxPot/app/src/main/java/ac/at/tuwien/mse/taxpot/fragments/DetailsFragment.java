@@ -1,24 +1,17 @@
 package ac.at.tuwien.mse.taxpot.fragments;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.vision.text.Text;
 
 import ac.at.tuwien.mse.taxpot.R;
 import ac.at.tuwien.mse.taxpot.models.TaxPot;
@@ -85,7 +78,7 @@ public class DetailsFragment extends Fragment {
             }
         });
 
-        Button commentButton = (Button)view.findViewById(R.id.comment_button);
+        Button commentButton = (Button)view.findViewById(R.id.report_button);
         commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
