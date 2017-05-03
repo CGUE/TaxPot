@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -7,7 +8,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white">
+        android:background="@android:color/white"
+        tools:ignore="UselessParent">
 
         <Button
             android:id="@+id/cancel_btn"
@@ -16,7 +18,7 @@
             android:layout_below="@+id/taxiCountRating"
             android:layout_toLeftOf="@+id/postCommentBtn"
             android:layout_toStartOf="@+id/postCommentBtn"
-            android:text="Abbrechen" />
+            android:text="@string/cancel" />
 
         <Button
             android:id="@+id/postCommentBtn"
@@ -28,7 +30,7 @@
             android:layout_marginBottom="11dp"
             android:layout_marginEnd="30dp"
             android:layout_marginRight="30dp"
-            android:text="Fertig" />
+            android:text="@string/finish" />
 
         <RatingBar
             android:id="@+id/driversRating"
@@ -65,7 +67,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignStart="@+id/driversRating"
             android:layout_marginTop="69dp"
-            android:text="Fahrer" />
+            android:text="@string/driver2" />
 
         <TextView
             android:id="@+id/textView5"
@@ -75,7 +77,7 @@
             android:layout_alignLeft="@+id/safeRating"
             android:layout_alignStart="@+id/safeRating"
             android:layout_marginBottom="12dp"
-            android:text="Umfeld" />
+            android:text="@string/safe2" />
 
         <TextView
             android:id="@+id/textView6"
@@ -85,6 +87,6 @@
             android:layout_alignLeft="@+id/taxiCountRating"
             android:layout_alignStart="@+id/taxiCountRating"
             android:layout_marginBottom="14dp"
-            android:text="Anzahl an Taxis" />
+            android:text="@string/taxiCount2" />
     </RelativeLayout>
 </LinearLayout>

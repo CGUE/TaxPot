@@ -5,12 +5,14 @@
     <string name="comment_button">Kommentare</string>
     <string name="rating_button">Bewertungen</string>
     <string name="rate_button">Bewerten</string>
-    <string name="streetName">StreetName</string>
+    <string name="streetName">Hasengasse 4</string>
     <string name="stellenplatzanzahl">Stellenplatzanzahl:</string>
     <string name="zeitraum">Zeitraum:</string>
     <string name="no_entries_found">Kein Eintrag gefunden</string>
     <string name="driver">Freundliche Fahrer</string>
+    <string name="driver2">Fahrer</string>
     <string name="safe">Sicheres Umfeld</string>
+    <string name="safe2">Umfeld</string>
     <string name="taxiCount">Viele Taxis</string>
     <string name="day">Tag</string>
     <string name="night">Night</string>
@@ -19,6 +21,13 @@
     <string name="to_filter">Filtern</string>
     <string name="post">Post</string>
     <string name="zero_double">0.0</string>
+    <string name="taxiCount2">Anzahl an Taxis</string>
+    <string name="number">"3"</string>
+    <string name="addComment">Kommentar hinzufügen</string>
+    <string name="comment1">Sichere Gegend, viele Menschen unterwegs. Viele Taxis vorhanden</string>
+    <string name="comment2">Fahrer sehr nett, sind lustige Gesprächspartner. Warteschlange, falls man am Abend ein Taxi haben will.</string>
+    <string name="time">"10:00"</string>
+    <string name="finish">Fertig</string>
 
     <string name="report_title">Neuen Taxistand Melden</string>
     <string name="address">Adresse</string>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rl_ratings"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -8,7 +9,7 @@
     <android.support.v7.widget.CardView
         android:id="@+id/card_container"
         android:layout_width="match_parent"
-        android:layout_height="320dp"
+        android:layout_height="350dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -38,9 +39,10 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
-                        android:text="StreetName"
+                        android:text="@string/streetName"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/detailfragment_header" />
+                        android:textSize="@dimen/detailfragment_header"
+                        tools:ignore="SpUsage" />
 
                     <TextView
                         android:id="@+id/parkingSpace"
@@ -69,7 +71,8 @@
                         android:layout_marginLeft="@dimen/detail_fragment_marginLeft"
                         android:layout_toEndOf="@+id/parkingSpace"
                         android:layout_toRightOf="@+id/parkingSpace"
-                        android:text="calculated number" />
+                        android:text="@string/number"
+                        tools:ignore="RtlHardcoded" />
 
                     <TextView
                         android:id="@+id/serviceTimeValue"
@@ -80,7 +83,8 @@
                         android:layout_marginLeft="@dimen/detail_fragment_marginLeft"
                         android:layout_toEndOf="@+id/serviceTime"
                         android:layout_toRightOf="@+id/serviceTime"
-                        android:text="retrieved value" />
+                        android:text="@string/zero_double"
+                        tools:ignore="RtlHardcoded" />
 
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
@@ -102,7 +106,7 @@
                     android:id="@+id/textView4"
                     android:layout_width="271dp"
                     android:layout_height="wrap_content"
-                    android:text="Freundliche Fahrer" />
+                    android:text="@string/driver" />
 
                 <RatingBar
                     android:id="@+id/driversRating"
@@ -116,7 +120,7 @@
                     android:id="@+id/textView2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Sicheres Umfeld" />
+                    android:text="@string/safe" />
 
                 <RatingBar
                     android:id="@+id/safeRating"
@@ -130,7 +134,7 @@
                     android:id="@+id/textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Anzahl der Taxis" />
+                    android:text="@string/taxiCount2" />
 
                 <RatingBar
                     android:id="@+id/taxiCountRating"
@@ -150,7 +154,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:text="@string/rate_button"
-                android:textSize="@dimen/detailfragment_text" />
+                android:textSize="@dimen/detailfragment_text"
+                tools:ignore="SpUsage" />
 
         </RelativeLayout>
 

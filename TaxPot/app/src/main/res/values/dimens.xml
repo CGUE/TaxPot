@@ -2,7 +2,7 @@
 <resources>
     <dimen name="search_bar_inset">15dp</dimen>
     <dimen name="detailfragment_text">16dp</dimen>
-    <dimen name="detailfragment_header">25dp</dimen>
+    <dimen name="detailfragment_header">22dp</dimen>
     <dimen name="detail_fragment_marginLeft">15dp</dimen>
     <dimen name="header_elevation">3dp</dimen>
     <dimen name="circle_dia">30dp</dimen>
