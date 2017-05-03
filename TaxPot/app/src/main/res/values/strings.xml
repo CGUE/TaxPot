@@ -7,4 +7,9 @@
     <string name="rate_button">Bewerten</string>
     <string name="stellenplatzanzahl">Stellenplatzanzahl:</string>
     <string name="zeitraum">Zeitraum:</string>
+    <string name="no_entries_found">Kein Eintrag gefunden</string>
+
+    <string name="on_request_fail_message">Es ist leider ein Fehler aufgetreten.</string>
+    <string name="google_directions_url">https://maps.googleapis.com/maps/api/directions/json?</string>
+    <string name="datagv_url">http://data.wien.gv.at/daten/geo?service=WFS&amp;request=GetFeature&amp;version=1.1.0&amp;typeName=ogdwien:TAXIOGD&amp;srsName=EPSG:4326&amp;outputFormat=json</string>
 </resources>

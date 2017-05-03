@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.vision.text.Text;
 
 import ac.at.tuwien.mse.taxpot.R;
 import ac.at.tuwien.mse.taxpot.models.TaxPot;
@@ -29,6 +30,7 @@ import ac.at.tuwien.mse.taxpot.models.TaxPot;
 public class DetailsFragment extends Fragment {
 
     private TaxPot taxPot;
+    private TextView duration_tv;
 
     @Nullable
     @Override
@@ -42,8 +44,12 @@ public class DetailsFragment extends Fragment {
         taxPot.setServiceTime(getArguments().getString("serviceTime"));
         taxPot.setParkingSpace(getArguments().getString("parkingSpace"));
 
+        // set streetname
         TextView header = (TextView) view.findViewById(R.id.streetname_header);
         header.setText(taxPot.getAddress());
+
+        // set duration
+        duration_tv = (TextView) view.findViewById(R.id.distance_in_min);
 
         Button ratingButton = (Button)view.findViewById(R.id.rating_button);
         ratingButton.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +81,10 @@ public class DetailsFragment extends Fragment {
         });
 
         return view;
+    }
+
+    public void OnDurationCalculatedCallback(String duration){
+        duration_tv.setText(duration);
     }
 
 }

@@ -1,6 +1,7 @@
 package ac.at.tuwien.mse.taxpot.fragments;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -38,6 +39,14 @@ public class RatingsFragment extends Fragment {
 
         TextView header = (TextView) view.findViewById(R.id.streetName);
         header.setText(taxPot.getAddress());
+
+        // set parking space
+        TextView parkingSpace = (TextView) view.findViewById(R.id.parkingSpaceValue);
+        parkingSpace.setText(taxPot.getParkingSpace().equals("null") ? view.getResources().getString(R.string.no_entries_found) : taxPot.getParkingSpace());
+
+        // set service time
+        TextView serviceTime = (TextView) view.findViewById(R.id.serviceTimeValue);
+        serviceTime.setText(taxPot.getServiceTime().equals("null") ? view.getResources().getString(R.string.no_entries_found) : taxPot.getServiceTime());
 
         return view;
     }

@@ -13,6 +13,15 @@ public class TaxPot implements ClusterItem{
     private LatLng latLng;
     private String parkingSpace;
     private String serviceTime;
+    private String duration;
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
 
     public String getAddress() {
         return address;
