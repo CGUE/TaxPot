@@ -79,9 +79,11 @@
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/starrating"
                 android:layout_marginLeft="@dimen/square_button_padding"
+                android:paddingTop="@dimen/detailfragment_text"
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:text="DistanceInMin"
+                android:textColor="@color/cast_libraries_material_featurehighlight_outer_highlight_default_color"
                 android:textSize="@dimen/detailfragment_text" />
 
             <Button

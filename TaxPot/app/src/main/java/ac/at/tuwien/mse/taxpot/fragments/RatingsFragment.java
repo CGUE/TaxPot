@@ -1,6 +1,7 @@
 package ac.at.tuwien.mse.taxpot.fragments;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;

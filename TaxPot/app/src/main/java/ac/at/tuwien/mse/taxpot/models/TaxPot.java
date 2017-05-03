@@ -16,6 +16,15 @@ public class TaxPot implements ClusterItem{
     private double rating =3.5;
     private int ratingCount = 0;
     private double allRatings;
+    private String duration;
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
 
     public String getAddress() {
         return address;

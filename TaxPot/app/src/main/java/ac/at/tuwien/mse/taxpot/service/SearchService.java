@@ -1,5 +1,6 @@
 package ac.at.tuwien.mse.taxpot.service;
 
+import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -32,6 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import ac.at.tuwien.mse.taxpot.R;
+import ac.at.tuwien.mse.taxpot.view.MapsActivity;
 
 /**
  * Created by markj on 4/20/2017.
@@ -44,6 +46,7 @@ public class SearchService implements FloatingSearchView.OnQueryChangeListener,
     private GoogleApiClient client;
     private GoogleMap mMap;
     private Marker positionMarker;
+    private MapsActivity mapsActivity;
 
     private final LatLngBounds VIENNA = new LatLngBounds.Builder()
                                         .include(new LatLng(16.272469, 48.265241))
@@ -53,11 +56,12 @@ public class SearchService implements FloatingSearchView.OnQueryChangeListener,
     //private final LatLngBounds VIENNA = new LatLngBounds(new LatLng(48.128912, 16.255474),
     //                                                   new LatLng(48.279473, 16.490307));
 
-    public SearchService(GoogleApiClient client, GoogleMap mMap, FloatingSearchView searchBar){
+    public SearchService(GoogleApiClient client, GoogleMap mMap, MapsActivity mapsActivity){
         super();
         this.client = client;
         this.mMap = mMap;
-        this.searchBar = searchBar;
+        this.mapsActivity = mapsActivity;
+        this.searchBar = mapsActivity.getSearchBar();
     }
 
     @Override
