@@ -1,24 +1,23 @@
 package ac.at.tuwien.mse.taxpot.fragments;
 
 import android.app.Fragment;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.PopupWindow;
-import android.widget.RatingBar;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import ac.at.tuwien.mse.taxpot.R;
+import ac.at.tuwien.mse.taxpot.databinding.LayoutCommentsBinding;
 import ac.at.tuwien.mse.taxpot.models.TaxPot;
+import ac.at.tuwien.mse.taxpot.view.MapsActivity;
 
 /**
  * Created by Aileen on 5/3/2017.
@@ -30,46 +29,50 @@ public class CommentsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, final Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_comments, container, false);
+        final LayoutCommentsBinding binding = DataBindingUtil.inflate(inflater, R.layout.layout_comments, container, false);
 
-        taxPot = new TaxPot();
-        taxPot.setAddress(getArguments().getString("adress"));
-        LatLng latLng = new LatLng(getArguments().getDouble("latitude"), getArguments().getDouble("longitude"));
-        taxPot.setLatLng(latLng);
-        taxPot.setServiceTime(getArguments().getString("serviceTime"));
-        taxPot.setParkingSpace(getArguments().getString("parkingSpace"));
+        taxPot = (TaxPot) getArguments().get("taxpot");
+        binding.setTaxpot(taxPot);
 
-        TextView header = (TextView) view.findViewById(R.id.streetName);
-        header.setText(taxPot.getAddress());
+        final MapsActivity mainActivity = (MapsActivity) getActivity();
+        if(mainActivity.getMyLocationButton() != null) {
+            mainActivity.getMyLocationButton().hide();
+        }
 
-        TextView parkingSpaceValue = (TextView) view.findViewById(R.id.parkingSpaceValue);
-        parkingSpaceValue.setText(taxPot.getParkingSpace());
+        final DatabaseReference myRef = mainActivity.getDatabase().getReference(taxPot.getId());
 
-        TextView serviceTimeValue = (TextView) view.findViewById(R.id.serviceTimeValue);
-        serviceTimeValue.setText(taxPot.getServiceTime());
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String comment = dataSnapshot.child("comment").getValue(String.class);
+                binding.comment1.setText(comment);
+            }
 
-        final EditText ownComment = (EditText) view.findViewById(R.id.own_comment);
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-        final ScrollView commentSection = (ScrollView) view.findViewById(R.id.comment_section);
+            }
+        });
 
-        Button postCommentBtn = (Button)view.findViewById(R.id.postCommentBtn);
-        postCommentBtn.setOnClickListener(new View.OnClickListener() {
+        binding.postCommentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(ownComment == null) {
+                if(binding.ownComment == null) {
                     Log.d("TaxPot", "comment null");
                 }
 
-                if(commentSection == null){
+                if(binding.commentSection == null){
                     Log.d("TaxPot", "section null");
                 }
-
+                myRef.child("comment").setValue(binding.ownComment.getText().toString());
+                Log.d("TaxPot", "Comment added:"+ binding.ownComment.getText().toString());
+                binding.ownComment.setText("");
                 //commentSection.addView(ownComment);
 
             }
         });
 
-        return view;
+        return binding.getRoot();
     }
 }

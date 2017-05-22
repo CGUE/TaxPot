@@ -35,8 +35,11 @@
     <string name="taxiPlaceCount">Stellenplatzanzahl</string>
     <string name="report_Btn">Melden</string>
 
+    <string name="default_val">keine Daten vorhanden</string>
+    <string name="null_value">null</string>
 
     <string name="on_request_fail_message">Es ist leider ein Fehler aufgetreten.</string>
     <string name="google_directions_url">https://maps.googleapis.com/maps/api/directions/json?</string>
+    <string name="google_navigation_url">google.navigation:</string>
     <string name="datagv_url">http://data.wien.gv.at/daten/geo?service=WFS&amp;request=GetFeature&amp;version=1.1.0&amp;typeName=ogdwien:TAXIOGD&amp;srsName=EPSG:4326&amp;outputFormat=json</string>
 </resources>

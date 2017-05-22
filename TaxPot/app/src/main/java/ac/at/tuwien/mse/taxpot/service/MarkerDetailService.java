@@ -6,10 +6,12 @@ import android.app.FragmentTransaction;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -59,14 +61,10 @@ public class MarkerDetailService implements ClusterManager.OnClusterItemClickLis
         FragmentTransaction transaction = fragmentManager.beginTransaction();
 
         Bundle bundle = new Bundle();
-        bundle.putString("adress", taxPot.getAddress());
-        bundle.putDouble("longitude", taxPot.getLatLng().longitude);
-        bundle.putDouble("latitude", taxPot.getLatLng().latitude);
-        bundle.putString("serviceTime", taxPot.getServiceTime());
-        bundle.putString("parkingSpace", taxPot.getParkingSpace());
+        bundle.putSerializable("taxpot", taxPot);
 
         final DetailsFragment detailsFrag = new DetailsFragment();
-        getDuration(mainActivity.getCurrentLocation(), taxPot.getLatLng(), detailsFrag);
+        getDuration(mainActivity.getCurrentLocation(), new LatLng(taxPot.getLatitude(), taxPot.getLongitude()), detailsFrag);
         detailsFrag.setArguments(bundle);
 
         transaction.setCustomAnimations(R.animator.slide_up,
@@ -88,12 +86,16 @@ public class MarkerDetailService implements ClusterManager.OnClusterItemClickLis
         url += "origin="+ currentLocation.getLatitude()+","+currentLocation.getLongitude();
         url += "&destination="+latLng.latitude+","+latLng.longitude;
         url += "&mode=walking";
+        url += "&key="+mainActivity.getResources().getString(R.string.google_maps_key);
+
+        Log.d("TaxPot", "URL: "+url);
+
         JsonObjectRequest request  = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("TaxPot", "Response received!");
+                        Log.d("TaxPot", "Response received!: "+response.toString());
 
                         try {
                             JSONArray routes = response.getJSONArray("routes");

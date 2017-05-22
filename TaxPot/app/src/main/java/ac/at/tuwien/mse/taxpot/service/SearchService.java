@@ -1,29 +1,22 @@
 package ac.at.tuwien.mse.taxpot.service;
 
-import android.location.Location;
 import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.MenuItem;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.drive.query.Query;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.AutocompletePredictionBuffer;
-import com.google.android.gms.location.places.GeoDataApi;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -33,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import ac.at.tuwien.mse.taxpot.R;
 import ac.at.tuwien.mse.taxpot.view.MapsActivity;
 
 /**

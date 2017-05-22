@@ -2,6 +2,7 @@ package ac.at.tuwien.mse.taxpot.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -17,7 +18,9 @@ import android.widget.TextView;
 import com.google.android.gms.maps.model.LatLng;
 
 import ac.at.tuwien.mse.taxpot.R;
+import ac.at.tuwien.mse.taxpot.databinding.LayoutRatingsBinding;
 import ac.at.tuwien.mse.taxpot.models.TaxPot;
+import ac.at.tuwien.mse.taxpot.view.MapsActivity;
 
 /**
  * Created by markj on 4/29/2017.
@@ -32,46 +35,32 @@ public class RatingsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        Log.d("TaxPot", "Ratingsfragment created");
-        View view = inflater.inflate(R.layout.layout_ratings, container, false);
+        final LayoutRatingsBinding binding = DataBindingUtil.inflate(inflater, R.layout.layout_ratings, container, false);
 
-        taxPot = new TaxPot();
-        taxPot.setAddress(getArguments().getString("adress"));
-        LatLng latLng = new LatLng(getArguments().getDouble("latitude"), getArguments().getDouble("longitude"));
-        taxPot.setLatLng(latLng);
-        taxPot.setServiceTime(getArguments().getString("serviceTime"));
-        taxPot.setParkingSpace(getArguments().getString("parkingSpace"));
+        taxPot = (TaxPot) getArguments().get("taxpot");
+        binding.setTaxpot(taxPot);
 
-        TextView header = (TextView) view.findViewById(R.id.streetName);
-        header.setText(taxPot.getAddress());
+        MapsActivity mainActivity = (MapsActivity) getActivity();
+        if(mainActivity.getMyLocationButton() != null) {
+            mainActivity.getMyLocationButton().hide();
+        }
 
-        TextView parkingSpaceValue = (TextView) view.findViewById(R.id.parkingSpaceValue);
-        parkingSpaceValue.setText(taxPot.getParkingSpace());
+        binding.driversRating.setMax(5);
+        binding.driversRating.setClickable(false);
 
-        TextView serviceTimeValue = (TextView) view.findViewById(R.id.serviceTimeValue);
-        serviceTimeValue.setText(taxPot.getServiceTime());
-
-        final RatingBar driversRating = (RatingBar) view.findViewById(R.id.driversRating);
-        driversRating.setMax(5);
-        driversRating.setClickable(false);
-
-        RatingBar safeRating = (RatingBar) view.findViewById(R.id.safeRating);
-        safeRating.setMax(5);
+        binding.safeRating.setMax(5);
         //safeRating.setNumStars(3);
-        safeRating.setClickable(false);
+        binding.safeRating.setClickable(false);
 
-        final RatingBar taxiCountRating = (RatingBar) view.findViewById(R.id.taxiCountRating);
-        taxiCountRating.setMax(5);
+        binding.taxiCountRating.setMax(5);
         //taxiCountRating.setRating(2.5f);
-        taxiCountRating.setClickable(false);
+        binding.taxiCountRating.setClickable(false);
 
-
-        Button submitRatingBtn = (Button)view.findViewById(R.id.postCommentBtn);
-        submitRatingBtn.setOnClickListener(new View.OnClickListener() {
+        binding.postCommentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Log.d("TaxPot", String.valueOf(driversRating.getRating()));
+                Log.d("TaxPot", String.valueOf(binding.driversRating.getRating()));
                 /*
                 layoutInflater = LayoutInflater.from(getActivity());
                 ViewGroup container = (ViewGroup) layoutInflater.inflate(R.layout.layout_submit_rating,null);
@@ -102,9 +91,7 @@ public class RatingsFragment extends Fragment {
                 });
             }
         });
-
-
-        return view;
+        return binding.getRoot();
     }
 
 }

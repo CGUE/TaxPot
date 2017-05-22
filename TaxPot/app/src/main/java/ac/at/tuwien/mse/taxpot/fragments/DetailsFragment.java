@@ -3,18 +3,27 @@ package ac.at.tuwien.mse.taxpot.fragments;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Map;
+
 import ac.at.tuwien.mse.taxpot.R;
+import ac.at.tuwien.mse.taxpot.databinding.LayoutMarkerdetailsBinding;
 import ac.at.tuwien.mse.taxpot.models.TaxPot;
+import ac.at.tuwien.mse.taxpot.view.MapsActivity;
 
 /**
  * Created by markj on 4/29/2017.
@@ -28,29 +37,33 @@ public class DetailsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_markerdetails, container, false);
+        LayoutMarkerdetailsBinding binding = DataBindingUtil.inflate(inflater, R.layout.layout_markerdetails, container, false);
+        taxPot = (TaxPot) getArguments().getSerializable("taxpot");
+        binding.setTaxpot(taxPot);
 
-        taxPot = new TaxPot();
-        taxPot.setAddress(getArguments().getString("adress"));
-        LatLng latLng = new LatLng(getArguments().getDouble("latitude"), getArguments().getDouble("longitude"));
-        taxPot.setLatLng(latLng);
-        taxPot.setServiceTime(getArguments().getString("serviceTime"));
-        taxPot.setParkingSpace(getArguments().getString("parkingSpace"));
-
-        // set streetname
-        TextView header = (TextView) view.findViewById(R.id.streetname_header);
-        header.setText(taxPot.getAddress());
-
-        // set duration
-        duration_tv = (TextView) view.findViewById(R.id.distance_in_min);
+        MapsActivity mainActivity = (MapsActivity) getActivity();
+        if(mainActivity.getmMap() != null){
+            mainActivity.getmMap().getUiSettings().setAllGesturesEnabled(false);
+        }
+        if(mainActivity.getMyLocationButton() != null) {
+            mainActivity.getMyLocationButton().hide();
+        }
 
         //TODO: rating stars here!
 
-        TextView ratingValue = (TextView) view.findViewById(R.id.rating);
-        ratingValue.setText(String.valueOf(taxPot.getRating()));
+        binding.navigationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String q = "q="+taxPot.getLatitude()+","+taxPot.getLongitude();
+                q += "&mode=w";
+                Log.d("TaxPot", getString(R.string.google_navigation_url)+q);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_navigation_url)+q));
+                intent.setPackage("com.google.android.apps.maps");
+                startActivity(intent);
+            }
+        });
 
-        Button ratingButton = (Button)view.findViewById(R.id.rating_button);
-        ratingButton.setOnClickListener(new View.OnClickListener() {
+        binding.ratingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // get FragmentManager and start FragmentTransaction
@@ -58,15 +71,8 @@ public class DetailsFragment extends Fragment {
 
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-                Bundle bundle = new Bundle();
-                bundle.putString("adress", taxPot.getAddress());
-                bundle.putDouble("longitude", taxPot.getLatLng().longitude);
-                bundle.putDouble("latitude", taxPot.getLatLng().latitude);
-                bundle.putString("serviceTime", taxPot.getServiceTime());
-                bundle.putString("parkingSpace", taxPot.getParkingSpace());
-
                 RatingsFragment ratingsFrag = new RatingsFragment();
-                ratingsFrag.setArguments(bundle);
+                ratingsFrag.setArguments(getArguments());
 
                 // replace
                 transaction.setCustomAnimations(R.animator.slide_up,
@@ -78,8 +84,8 @@ public class DetailsFragment extends Fragment {
             }
         });
 
-        Button commentButton = (Button)view.findViewById(R.id.report_button);
-        commentButton.setOnClickListener(new View.OnClickListener() {
+        // Button commentButton = (Button)view.findViewById(R.id.report_button);
+        binding.reportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // get FragmentManager and start FragmentTransaction
@@ -87,15 +93,8 @@ public class DetailsFragment extends Fragment {
 
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-                Bundle bundle = new Bundle();
-                bundle.putString("adress", taxPot.getAddress());
-                bundle.putDouble("longitude", taxPot.getLatLng().longitude);
-                bundle.putDouble("latitude", taxPot.getLatLng().latitude);
-                bundle.putString("serviceTime", taxPot.getServiceTime());
-                bundle.putString("parkingSpace", taxPot.getParkingSpace());
-
                 CommentsFragment commentsFrag = new CommentsFragment();
-                commentsFrag.setArguments(bundle);
+                commentsFrag.setArguments(getArguments());
 
                 // replace
                 transaction.setCustomAnimations(R.animator.slide_up,
@@ -107,11 +106,25 @@ public class DetailsFragment extends Fragment {
             }
         });
 
-        return view;
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        MapsActivity mainActivity = (MapsActivity) getActivity();
+        if(mainActivity.getmMap() != null){
+            mainActivity.getmMap().getUiSettings().setAllGesturesEnabled(true);
+        }
+        if(mainActivity.getMyLocationButton() != null){
+            mainActivity.getMyLocationButton().show();
+        }
     }
 
     public void OnDurationCalculatedCallback(String duration){
-        duration_tv.setText(duration);
+        if(taxPot != null){
+            taxPot.setDuration(duration);
+        }
     }
 
 }

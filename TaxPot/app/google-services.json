@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "840644671643",
+    "firebase_url": "https://taxpot-c9291.firebaseio.com",
+    "project_id": "taxpot-c9291",
+    "storage_bucket": "taxpot-c9291.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:840644671643:android:9473fdecad77a698",
+        "android_client_info": {
+          "package_name": "taxpot.mse.tuwien.at.ac.taxpot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "840644671643-ibmj8jc75fepbp6cf709sfmjr083jk6c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "taxpot.mse.tuwien.at.ac.taxpot",
+            "certificate_hash": "9f3974984d073d9ed2d1d598e81eb9ba2433def2"
+          }
+        },
+        {
+          "client_id": "840644671643-u8476c7tl0h9g1va76co6b2e6vh8ghb5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeRUoLln-zqIFF2tGGfC5h-LXxQ75QmZA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "840644671643-u8476c7tl0h9g1va76co6b2e6vh8ghb5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,16 +1,28 @@
 package ac.at.tuwien.mse.taxpot.models;
 
+import android.databinding.Bindable;
+import android.databinding.Observable;
+import android.databinding.PropertyChangeRegistry;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
+
+import java.io.Serializable;
+
+import ac.at.tuwien.mse.taxpot.BR;
 
 /**
  * Created by markj on 4/29/2017.
  */
 
-public class TaxPot implements ClusterItem{
+public class TaxPot implements ClusterItem, Serializable, Observable{
 
+    private transient PropertyChangeRegistry registry = new PropertyChangeRegistry();
+
+    private String id;
     private String address;
-    private LatLng latLng;
+    private Double latitude;
+    private Double longitude;
     private String parkingSpace;
     private String serviceTime;
     private double rating =3.5;
@@ -18,12 +30,22 @@ public class TaxPot implements ClusterItem{
     private double allRatings;
     private String duration;
 
+    @Bindable
     public String getDuration() {
         return duration;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public void setDuration(String duration) {
         this.duration = duration;
+        registry.notifyChange(this, BR.duration);
     }
 
     public String getAddress() {
@@ -34,12 +56,20 @@ public class TaxPot implements ClusterItem{
         this.address = address;
     }
 
-    public LatLng getLatLng() {
-        return latLng;
+    public Double getLatitude() {
+        return latitude;
     }
 
-    public void setLatLng(LatLng latLng) {
-        this.latLng = latLng;
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public String getParkingSpace() {
@@ -60,7 +90,7 @@ public class TaxPot implements ClusterItem{
 
     @Override
     public LatLng getPosition() {
-        return latLng;
+        return new LatLng(latitude, longitude);
     }
 
     public double getRating(){
@@ -77,5 +107,15 @@ public class TaxPot implements ClusterItem{
         allRatings += rating;
         this.rating = allRatings/ratingCount;
         */
+    }
+
+    @Override
+    public void addOnPropertyChangedCallback(OnPropertyChangedCallback onPropertyChangedCallback) {
+        registry.add(onPropertyChangedCallback);
+    }
+
+    @Override
+    public void removeOnPropertyChangedCallback(OnPropertyChangedCallback onPropertyChangedCallback) {
+        registry.remove(onPropertyChangedCallback);
     }
 }

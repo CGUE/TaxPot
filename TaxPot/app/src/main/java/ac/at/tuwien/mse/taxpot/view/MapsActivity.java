@@ -1,14 +1,14 @@
 package ac.at.tuwien.mse.taxpot.view;
 
 import android.Manifest;
+import android.animation.Animator;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.multidex.MultiDex;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -37,7 +37,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.maps.android.clustering.ClusterManager;
 
 import org.json.JSONArray;
@@ -56,7 +58,6 @@ import ac.at.tuwien.mse.taxpot.view.CustomCluster.CustomClusterRenderer;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks,
-        OnMyLocationButtonClickListener,
         ActivityCompat.OnRequestPermissionsResultCallback{
     private final String TAG = "TaxPot";
     private GoogleApiClient googleApiClient;
@@ -68,9 +69,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FloatingSearchView searchBar;
     private View menuItem1;
 
+    private FirebaseDatabase database;
 
     private ClusterManager<TaxPot> taxPotClusterManager;
     private Location currentLocation;
+    private FloatingActionButton myLocationButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,13 +94,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        View locationButton = ((View) mapFragment.getView().findViewById(1).getParent()).findViewById(2);
-        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
-        // position on right bottom
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-        rlp.setMargins(0, 0, 30, 30);
-
         searchBar = (FloatingSearchView) findViewById(R.id.floating_search_view);
         menuItem1 = findViewById(R.id.menu_item1);
 
@@ -107,6 +103,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 onMenuListened(item);
             }
         });
+
+        // Write a message to the database
+        database = FirebaseDatabase.getInstance();
+    }
+
+    public FirebaseDatabase getDatabase() {
+        return database;
     }
 
     @Override
@@ -114,8 +117,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // activate my location button
-        mMap.setOnMyLocationButtonClickListener(this);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.getUiSettings().setCompassEnabled(false);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.setMyLocationEnabled(true);
         enableMyLocation();
+        myLocationButton = (FloatingActionButton) findViewById(R.id.my_location_button);
+        myLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mMap == null)
+                    return;
+
+                currentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+                if (currentLocation == null) {
+                    return;
+                }
+
+                LatLng moveTo = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(moveTo));
+            }
+        });
 
         // set camera perpective
         mMap.setMinZoomPreference(10.f);
@@ -160,6 +182,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    public GoogleMap getmMap(){
+        return mMap;
+    }
+
+    public FloatingActionButton getMyLocationButton() {
+        return myLocationButton;
+    }
+
     private void parseDatagvResponse(JSONObject json) throws JSONException {
         JSONArray features = json.getJSONArray("features");
 
@@ -172,11 +202,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             JSONArray latLngInfo = coordinates.getJSONArray(0);
 
             TaxPot spot = new TaxPot();
+            spot.setId(feature.getString("id").replace(".", ""));
+
             if (properties.get("ADRESSE") != null)
                 spot.setAddress(properties.getString("ADRESSE"));
 
             if (latLngInfo != null)
-                spot.setLatLng(new LatLng(latLngInfo.getDouble(1), latLngInfo.getDouble(0)));
+                spot.setLatitude(latLngInfo.getDouble(1));
+                spot.setLongitude(latLngInfo.getDouble(0));
 
             if (properties.get("ZEITRAUM") != null)
                 spot.setServiceTime(properties.getString("ZEITRAUM"));
@@ -200,8 +233,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void enableMyLocation() {
-        Log.d(TAG, "enable location");
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -210,9 +241,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         } else if (mMap != null) {
             hasPermissions = true;
-            mMap.setMyLocationEnabled(true);
         }
-
     }
 
     @Override
@@ -222,7 +251,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             hasPermissions = true;
-            mMap.setMyLocationEnabled(true);
         }
     }
 
@@ -234,24 +262,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             enableMyLocation();
         }
     }
-
-    @Override
-    public boolean onMyLocationButtonClick() {
-        if (mMap == null)
-            return false;
-
-        currentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        if (currentLocation == null) {
-            return false;
-        }
-
-        LatLng moveTo = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(moveTo));
-
-        return false;
-    }
-
-
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -282,12 +292,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
             enableMyLocation();
         }
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(newBase);
-        MultiDex.install(this);
     }
 
     @Override

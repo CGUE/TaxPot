@@ -1,164 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rl_ratings"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_container"
+    <data>
+        <variable
+            name="taxpot"
+            type="ac.at.tuwien.mse.taxpot.models.TaxPot"/>
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/rl_ratings"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        app:cardBackgroundColor="@color/white">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="350dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            app:cardBackgroundColor="@color/white">
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/header_container"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/taxpot_yellow"
-                app:cardElevation="@dimen/header_elevation">
+                android:layout_height="match_parent">
 
-                <RelativeLayout
-                    android:id="@+id/header"
+                <android.support.v7.widget.CardView
+                    android:id="@+id/header_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/detail_fragment_marginLeft">
+                    app:cardBackgroundColor="@color/taxpot_yellow"
+                    app:cardElevation="@dimen/header_elevation">
 
-                    <TextView
-                        android:id="@+id/streetName"
+                    <RelativeLayout
+                        android:id="@+id/header"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:text="@string/streetName"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/detailfragment_header"
-                        tools:ignore="SpUsage" />
+                        android:layout_margin="@dimen/detail_fragment_marginLeft">
+
+                        <TextView
+                            android:id="@+id/streetName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:text="@{taxpot.address}"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/detailfragment_header"
+                            tools:ignore="SpUsage" />
+
+                        <TextView
+                            android:id="@+id/parkingSpace"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/streetName"
+                            android:text="@string/stellenplatzanzahl" />
+
+                        <TextView
+                            android:id="@+id/serviceTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignEnd="@+id/parkingSpace"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignRight="@+id/parkingSpace"
+                            android:layout_below="@+id/parkingSpace"
+                            android:text="@string/zeitraum" />
+
+                        <TextView
+                            android:id="@+id/parkingSpaceValue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@+id/parkingSpace"
+                            android:layout_alignBottom="@+id/parkingSpace"
+                            android:layout_marginLeft="@dimen/detail_fragment_marginLeft"
+                            android:layout_toEndOf="@+id/parkingSpace"
+                            android:layout_toRightOf="@+id/parkingSpace"
+                            android:text="@{taxpot.parkingSpace.equals(@string/null_value) ? @string/default_val : taxpot.parkingSpace}"
+                            tools:ignore="RtlHardcoded" />
+
+                        <TextView
+                            android:id="@+id/serviceTimeValue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@+id/serviceTime"
+                            android:layout_alignBottom="@+id/serviceTime"
+                            android:layout_marginLeft="@dimen/detail_fragment_marginLeft"
+                            android:layout_toEndOf="@+id/serviceTime"
+                            android:layout_toRightOf="@+id/serviceTime"
+                            android:text="@{taxpot.serviceTime.equals(@string/null_value) ? @string/default_val : taxpot.serviceTime}"
+                            tools:ignore="RtlHardcoded" />
+
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
+
+                <LinearLayout
+                    android:id="@+id/comments_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/postCommentBtn"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/header_container"
+                    android:layout_marginLeft="@dimen/detail_fragment_marginLeft"
+                    android:layout_marginRight="@dimen/detail_fragment_marginLeft"
+                    android:layout_marginTop="@dimen/detail_fragment_marginLeft"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/parkingSpace"
+                        android:id="@+id/textView4"
+                        android:layout_width="271dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/driver" />
+
+                    <RatingBar
+                        android:id="@+id/driversRating"
+                        style="@style/Widget.AppCompat.RatingBar.Indicator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/streetName"
-                        android:text="@string/stellenplatzanzahl" />
+                        android:numStars="5"
+                        android:rating="3" />
 
                     <TextView
-                        android:id="@+id/serviceTime"
+                        android:id="@+id/textView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/safe" />
+
+                    <RatingBar
+                        android:id="@+id/safeRating"
+                        style="@style/Widget.AppCompat.RatingBar.Indicator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignEnd="@+id/parkingSpace"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignRight="@+id/parkingSpace"
-                        android:layout_below="@+id/parkingSpace"
-                        android:text="@string/zeitraum" />
+                        android:numStars="5"
+                        android:rating="4" />
 
                     <TextView
-                        android:id="@+id/parkingSpaceValue"
+                        android:id="@+id/textView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignBaseline="@+id/parkingSpace"
-                        android:layout_alignBottom="@+id/parkingSpace"
-                        android:layout_marginLeft="@dimen/detail_fragment_marginLeft"
-                        android:layout_toEndOf="@+id/parkingSpace"
-                        android:layout_toRightOf="@+id/parkingSpace"
-                        android:text="@string/number"
-                        tools:ignore="RtlHardcoded" />
+                        android:text="@string/taxiCount2" />
 
-                    <TextView
-                        android:id="@+id/serviceTimeValue"
-                        android:layout_width="match_parent"
+                    <RatingBar
+                        android:id="@+id/taxiCountRating"
+                        style="@style/Widget.AppCompat.RatingBar.Indicator"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignBaseline="@+id/serviceTime"
-                        android:layout_alignBottom="@+id/serviceTime"
-                        android:layout_marginLeft="@dimen/detail_fragment_marginLeft"
-                        android:layout_toEndOf="@+id/serviceTime"
-                        android:layout_toRightOf="@+id/serviceTime"
-                        android:text="@string/zero_double"
-                        tools:ignore="RtlHardcoded" />
+                        android:numStars="5"
+                        android:rating="2" />
 
-                </RelativeLayout>
-            </android.support.v7.widget.CardView>
+                </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/comments_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/postCommentBtn"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/header_container"
-                android:layout_marginLeft="@dimen/detail_fragment_marginLeft"
-                android:layout_marginRight="@dimen/detail_fragment_marginLeft"
-                android:layout_marginTop="@dimen/detail_fragment_marginLeft"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="271dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/driver" />
-
-                <RatingBar
-                    android:id="@+id/driversRating"
-                    style="@style/Widget.AppCompat.RatingBar.Indicator"
+                <Button
+                    android:id="@+id/postCommentBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:numStars="5"
-                    android:rating="3" />
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/rate_button"
+                    android:textSize="@dimen/detailfragment_text"
+                    tools:ignore="SpUsage" />
 
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/safe" />
+            </RelativeLayout>
 
-                <RatingBar
-                    android:id="@+id/safeRating"
-                    style="@style/Widget.AppCompat.RatingBar.Indicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:numStars="5"
-                    android:rating="4" />
+        </android.support.v7.widget.CardView>
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/taxiCount2" />
-
-                <RatingBar
-                    android:id="@+id/taxiCountRating"
-                    style="@style/Widget.AppCompat.RatingBar.Indicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:numStars="5"
-                    android:rating="2" />
-
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/postCommentBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:text="@string/rate_button"
-                android:textSize="@dimen/detailfragment_text"
-                tools:ignore="SpUsage" />
-
-        </RelativeLayout>
-
-    </android.support.v7.widget.CardView>
-
-</RelativeLayout>
+    </RelativeLayout>
+</layout>

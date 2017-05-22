@@ -9,7 +9,6 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
-        multiDexEnabled true;
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -18,6 +17,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enabled = true;
+    }
 }
 
 dependencies {
@@ -25,23 +27,29 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    // arimorty floating search view library
+    
+
+    // card view library
+    
+    // google play services
+    
+    // volley library for http/https requests
+    
     compile 'com.android.support:appcompat-v7:25.1.1'
-    compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:animated-vector-drawable:25.3.1'
     compile 'com.android.support:customtabs:25.3.1'
     compile 'com.android.support:mediarouter-v7:25.3.1'
-    // arimorty floating search view library
     compile 'com.github.arimorty:floatingsearchview:2.0.4'
-
-    // card view library
     compile 'com.android.support:cardview-v7:25.1.1'
-
-    // google play services
-    compile 'com.google.android.gms:play-services:10.2.4'
-    compile 'com.google.maps.android:android-maps-utils:0.4+'
-
-    // volley library for http/https requests
+    compile 'com.google.android.gms:play-services-maps:10.2.6'
+    compile 'com.google.android.gms:play-services-places:10.2.6'
+    compile 'com.google.android.gms:play-services-location:10.2.6'
+    compile 'com.google.maps.android:android-maps-utils:0.4.+'
     compile 'com.android.volley:volley:1.0.0'
-
+    compile 'com.google.firebase:firebase-database:10.2.6'
     testCompile 'junit:junit:4.12'
 }
+
+
+apply plugin: 'com.google.gms.google-services'
