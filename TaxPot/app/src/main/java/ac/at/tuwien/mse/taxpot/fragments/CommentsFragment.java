@@ -4,6 +4,8 @@ import android.app.Fragment;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import ac.at.tuwien.mse.taxpot.R;
 import ac.at.tuwien.mse.taxpot.databinding.LayoutCommentsBinding;
+import ac.at.tuwien.mse.taxpot.models.Comment;
 import ac.at.tuwien.mse.taxpot.models.TaxPot;
 import ac.at.tuwien.mse.taxpot.view.MapsActivity;
 
@@ -24,6 +27,8 @@ import ac.at.tuwien.mse.taxpot.view.MapsActivity;
  */
 
 public class CommentsFragment extends Fragment {
+
+    private CommentAdapter commentAdapter;
     private TaxPot taxPot;
 
     @Nullable
@@ -35,12 +40,15 @@ public class CommentsFragment extends Fragment {
         binding.setTaxpot(taxPot);
 
         final MapsActivity mainActivity = (MapsActivity) getActivity();
+        if(mainActivity.getmMap() != null){
+            mainActivity.getmMap().getUiSettings().setAllGesturesEnabled(false);
+        }
         if(mainActivity.getMyLocationButton() != null) {
             mainActivity.getMyLocationButton().hide();
         }
 
-        final DatabaseReference myRef = mainActivity.getDatabase().getReference(taxPot.getId());
-
+        final DatabaseReference myRef = mainActivity.getDatabase().getReference();
+/*
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -54,6 +62,15 @@ public class CommentsFragment extends Fragment {
             }
         });
 
+*/
+        RecyclerView commentSection = binding.commentSection;
+        commentAdapter = new CommentAdapter(Comment.class, R.layout.viewholder_comment, CommentViewHolder.class, myRef.child(taxPot.getId()).child("comments"), myRef.child(taxPot.getId()).child("comments"));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        commentSection.setLayoutManager(layoutManager);
+        commentSection.setHasFixedSize(false);
+        commentSection.setAdapter(commentAdapter);
+
         binding.postCommentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,18 +78,21 @@ public class CommentsFragment extends Fragment {
                 if(binding.ownComment == null) {
                     Log.d("TaxPot", "comment null");
                 }
-
-                if(binding.commentSection == null){
-                    Log.d("TaxPot", "section null");
+                if(binding.ownComment.getText().toString().isEmpty()){
+                    return;
                 }
-                myRef.child("comment").setValue(binding.ownComment.getText().toString());
-                Log.d("TaxPot", "Comment added:"+ binding.ownComment.getText().toString());
+                myRef.child(taxPot.getId()).child("comments").push().setValue(new Comment("defaultuser", binding.ownComment.getText().toString()));
                 binding.ownComment.setText("");
-                //commentSection.addView(ownComment);
 
             }
         });
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        commentAdapter.cleanup();
     }
 }

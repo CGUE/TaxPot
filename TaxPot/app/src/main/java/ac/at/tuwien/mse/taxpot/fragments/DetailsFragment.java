@@ -32,7 +32,6 @@ import ac.at.tuwien.mse.taxpot.view.MapsActivity;
 public class DetailsFragment extends Fragment {
 
     private TaxPot taxPot;
-    private TextView duration_tv;
 
     @Nullable
     @Override
