@@ -6,4 +6,5 @@
     <dimen name="detail_fragment_marginLeft">15dp</dimen>
     <dimen name="header_elevation">3dp</dimen>
     <dimen name="circle_dia">30dp</dimen>
+    <dimen name="default_padding">8dp</dimen>
 </resources>
