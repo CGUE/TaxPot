@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
@@ -164,6 +165,7 @@ public class RatingsFragment extends Fragment {
                             occupancyRef.setValue(taxPot.getOccupancy());
                         }
                         popupWindow.dismiss();
+                        Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.rating_submitted), Toast.LENGTH_LONG).show();
                         getFragmentManager().popBackStack();
                     }
                 });
