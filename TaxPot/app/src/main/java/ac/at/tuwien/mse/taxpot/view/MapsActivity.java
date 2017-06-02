@@ -106,6 +106,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Write a message to the database
         database = FirebaseDatabase.getInstance();
+
+        // activate my location button
+        enableMyLocation();
     }
 
     public FirebaseDatabase getDatabase() {

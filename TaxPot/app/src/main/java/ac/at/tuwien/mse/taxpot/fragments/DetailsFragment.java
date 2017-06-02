@@ -48,8 +48,6 @@ public class DetailsFragment extends Fragment {
             mainActivity.getMyLocationButton().hide();
         }
 
-        //TODO: rating stars here!
-
         binding.navigationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

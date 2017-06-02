@@ -21,11 +21,20 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 import com.google.maps.android.clustering.ClusterManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import ac.at.tuwien.mse.taxpot.R;
 import ac.at.tuwien.mse.taxpot.fragments.DetailsFragment;
@@ -48,7 +57,7 @@ public class MarkerDetailService implements ClusterManager.OnClusterItemClickLis
     }
 
     @Override
-    public boolean onClusterItemClick(TaxPot taxPot) {
+    public boolean onClusterItemClick(final TaxPot taxPot) {
 
         // get FragmentManager and start FragmentTransaction
         FragmentManager fragmentManager = mainActivity.getFragmentManager();
@@ -57,6 +66,65 @@ public class MarkerDetailService implements ClusterManager.OnClusterItemClickLis
         if(fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
         }
+
+        // Firebase database ref
+        final DatabaseReference friendlinessRef = mainActivity.getDatabase().getReference().child(taxPot.getId()).child("friendliness");
+        final DatabaseReference safetyRef = mainActivity.getDatabase().getReference().child(taxPot.getId()).child("safety");
+        final DatabaseReference occupancyRef = mainActivity.getDatabase().getReference().child(taxPot.getId()).child("occupancy");
+
+        friendlinessRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                GenericTypeIndicator<List<Double>> type = new GenericTypeIndicator<List<Double>>() {};
+                if(!dataSnapshot.exists()){
+                    taxPot.setFriendliness(new ArrayList<Double>());
+                    return;
+                }
+                List<Double> ratings = dataSnapshot.getValue(type);
+                taxPot.setFriendliness(ratings);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        safetyRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                GenericTypeIndicator<List<Double>> type = new GenericTypeIndicator<List<Double>>() {};
+                if(!dataSnapshot.exists()){
+                    taxPot.setSafety(new ArrayList<Double>());
+                    return;
+                }
+                List<Double> ratings = dataSnapshot.getValue(type);
+                taxPot.setSafety(ratings);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        occupancyRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                GenericTypeIndicator<List<Double>> type = new GenericTypeIndicator<List<Double>>() {};
+                if(!dataSnapshot.exists()){
+                    taxPot.setOccupancy(new ArrayList<Double>());
+                    return;
+                }
+                List<Double> ratings = dataSnapshot.getValue(type);
+                taxPot.setOccupancy(ratings);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
 

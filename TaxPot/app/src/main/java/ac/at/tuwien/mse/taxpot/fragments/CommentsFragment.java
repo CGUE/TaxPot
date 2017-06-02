@@ -11,10 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
 import ac.at.tuwien.mse.taxpot.R;
 import ac.at.tuwien.mse.taxpot.databinding.LayoutCommentsBinding;
@@ -48,21 +45,7 @@ public class CommentsFragment extends Fragment {
         }
 
         final DatabaseReference myRef = mainActivity.getDatabase().getReference();
-/*
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String comment = dataSnapshot.child("comment").getValue(String.class);
-                binding.comment1.setText(comment);
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-*/
         RecyclerView commentSection = binding.commentSection;
         commentAdapter = new CommentAdapter(Comment.class, R.layout.viewholder_comment, CommentViewHolder.class, myRef.child(taxPot.getId()).child("comments"), myRef.child(taxPot.getId()).child("comments"));
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -88,6 +71,12 @@ public class CommentsFragment extends Fragment {
         });
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        commentAdapter.cleanup();
     }
 
     @Override

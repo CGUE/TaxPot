@@ -8,6 +8,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import ac.at.tuwien.mse.taxpot.BR;
 
@@ -25,10 +27,12 @@ public class TaxPot implements ClusterItem, Serializable, Observable{
     private Double longitude;
     private String parkingSpace;
     private String serviceTime;
-    private double rating =3.5;
-    private int ratingCount = 0;
-    private double allRatings;
     private String duration;
+
+    // rating variables
+    private List<Double> friendliness;
+    private List<Double> safety;
+    private List<Double> occupancy;
 
     @Bindable
     public String getDuration() {
@@ -88,25 +92,102 @@ public class TaxPot implements ClusterItem, Serializable, Observable{
         this.serviceTime = serviceTime;
     }
 
+    public List<Double> getFriendliness() {
+        return friendliness;
+    }
+
+    public void setFriendliness(List<Double> friendliness) {
+        this.friendliness = friendliness;
+    }
+
+    public List<Double> getSafety() {
+        return safety;
+    }
+
+    public void setSafety(List<Double> safety) {
+        this.safety = safety;
+    }
+
+    public List<Double> getOccupancy() {
+        return occupancy;
+    }
+
+    public void setOccupancy(List<Double> occupancy) {
+        this.occupancy = occupancy;
+    }
+
+    public float calculateFriendliness(){
+        if(friendliness == null || friendliness.size() == 0){
+            return 0.f;
+        }
+
+        float sum = 0;
+        for(Double val : friendliness){
+            sum += val;
+        }
+        return sum/friendliness.size();
+    }
+
+    public float calculateSafety(){
+        if(safety == null || safety.size() == 0){
+            return 0.f;
+        }
+
+        float sum = 0;
+        for(Double val : safety){
+            sum += val;
+        }
+        return sum/safety.size();
+    }
+
+    public float calculateOccupancy(){
+        if(occupancy == null || occupancy.size() == 0){
+            return 0.f;
+        }
+
+        float sum = 0;
+        for(Double val : occupancy){
+            sum += val;
+        }
+        return sum/occupancy.size();
+    }
+
+    public float calculateAvgRating(){
+        float sumFriendliness = 0;
+        float sumSafety = 0;
+        float sumOccupancy = 0;
+
+        if(friendliness == null){
+            friendliness = new ArrayList<Double>();
+        }
+        for(Double val : friendliness){
+            sumFriendliness += val;
+        }
+
+        if(safety == null){
+            safety = new ArrayList<Double>();
+        }
+        for(Double val : safety){
+            sumSafety += val;
+        }
+
+        if(occupancy == null){
+            occupancy = new ArrayList<Double>();
+        }
+        for(Double val : occupancy){
+            sumOccupancy += val;
+        }
+
+        sumFriendliness = friendliness.size() > 0 ? sumFriendliness / friendliness.size() : 0;
+        sumSafety = safety.size() > 0 ? sumSafety / safety.size() : 0;
+        sumOccupancy = occupancy.size() > 0 ? sumOccupancy / occupancy.size() : 0;
+
+        return (sumFriendliness + sumSafety + sumOccupancy) / 3;
+    }
+
     @Override
     public LatLng getPosition() {
         return new LatLng(latitude, longitude);
-    }
-
-    public double getRating(){
-        return this.rating;
-    }
-
-    public void setRating(double rating){
-        ratingCount++;
-
-        this.rating = rating;
-
-        //TODO: calculate avarage rating here;
-        /*
-        allRatings += rating;
-        this.rating = allRatings/ratingCount;
-        */
     }
 
     @Override
