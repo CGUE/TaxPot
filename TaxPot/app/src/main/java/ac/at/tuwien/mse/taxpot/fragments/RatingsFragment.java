@@ -51,6 +51,9 @@ public class RatingsFragment extends Fragment {
         binding.setTaxpot(taxPot);
 
         final MapsActivity mainActivity = (MapsActivity) getActivity();
+        if(mainActivity.getmMap() != null){
+            mainActivity.getmMap().getUiSettings().setAllGesturesEnabled(false);
+        }
         if(mainActivity.getMyLocationButton() != null) {
             mainActivity.getMyLocationButton().hide();
         }

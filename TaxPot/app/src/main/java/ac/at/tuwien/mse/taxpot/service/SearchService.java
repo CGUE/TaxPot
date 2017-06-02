@@ -111,7 +111,11 @@ public class SearchService implements FloatingSearchView.OnQueryChangeListener,
             while(it.hasNext()){
                 final AutocompletePrediction prediction = it.next();
 
-                PlaceSuggestion suggestion = new PlaceSuggestion(prediction.getPlaceId(), prediction.getFullText(null).toString());
+                String text = prediction.getFullText(null).toString();
+                String[] parts = text.split(",");
+                text = parts[0] + ", " + parts[parts.length-2];
+
+                PlaceSuggestion suggestion = new PlaceSuggestion(prediction.getPlaceId(), text);
                 suggestions.add(suggestion);
             }
             searchBar.swapSuggestions(suggestions);
