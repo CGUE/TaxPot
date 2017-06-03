@@ -134,6 +134,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 currentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
                 if (currentLocation == null) {
+                    Log.d(TAG, "currentLocation not found!");
                     return;
                 }
 
@@ -358,4 +359,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
     }
+
+
 }
