@@ -1,7 +1,7 @@
 package ac.at.tuwien.mse.taxpot.view;
 
 import android.Manifest;
-import android.animation.Animator;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.pm.PackageManager;
@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -34,10 +33,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.maps.android.clustering.ClusterManager;
@@ -62,12 +59,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private final String TAG = "TaxPot";
     private GoogleApiClient googleApiClient;
 
-    private boolean hasPermissions = false;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     private GoogleMap mMap;
     private FloatingSearchView searchBar;
-    private View menuItem1;
 
     private FirebaseDatabase database;
 
@@ -79,6 +74,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        // request permission if not given
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
+                    Manifest.permission.ACCESS_FINE_LOCATION, true);
+
+        } else {
+            initializeMap();
+        }
+    }
+
+    public FirebaseDatabase getDatabase() {
+        return database;
+    }
+
+    public void initializeMap(){
 
         // establish connection with google services
         googleApiClient = new GoogleApiClient.Builder(this)
@@ -95,7 +108,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         searchBar = (FloatingSearchView) findViewById(R.id.floating_search_view);
-        menuItem1 = findViewById(R.id.menu_item1);
 
         searchBar.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
             @Override
@@ -106,13 +118,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Write a message to the database
         database = FirebaseDatabase.getInstance();
-
-        // activate my location button
-        enableMyLocation();
-    }
-
-    public FirebaseDatabase getDatabase() {
-        return database;
     }
 
     @Override
@@ -120,7 +125,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // activate my location button
-        enableMyLocation();
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.getUiSettings().setMapToolbarEnabled(false);
@@ -181,8 +185,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.setOnMarkerClickListener(taxPotClusterManager);
         mMap.setOnCameraIdleListener(taxPotClusterManager);
-
-
     }
 
     public GoogleMap getmMap(){
@@ -235,34 +237,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return this.currentLocation;
     }
 
-    private void enableMyLocation() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
-                    Manifest.permission.ACCESS_FINE_LOCATION, true);
-
-        } else if (mMap != null) {
-            hasPermissions = true;
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode != LOCATION_PERMISSION_REQUEST_CODE)
             return;
 
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            hasPermissions = true;
-        }
-    }
-
-    @Override
-    protected void onResumeFragments() {
-        super.onResumeFragments();
-        if (!hasPermissions) {
-            // Permission was not granted, display error dialog
-            enableMyLocation();
+            initializeMap();
+        } else {
+            Toast.makeText(getApplicationContext(), getString(R.string.no_permission), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -283,17 +266,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.d(TAG, "CONNECTION ESTABLISHED!");
-        if (hasPermissions) {
-            currentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-            if(currentLocation != null) {
-                LatLng current = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
-            }
-        } else {
-            LatLng current = new LatLng(48.210033, 16.363449);
+        currentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        if(currentLocation != null) {
+            LatLng current = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
-            enableMyLocation();
         }
     }
 
@@ -301,7 +277,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onConnectionSuspended(int i) {
 
     }
-
 
     //TODO: make a menuService
     public void onMenuListened(MenuItem item) {

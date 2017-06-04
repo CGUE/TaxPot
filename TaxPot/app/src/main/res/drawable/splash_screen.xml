@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:drawable="@color/taxpot_yellow"/>
+
+    <item>
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/ic_startup"/>
+    </item>
+
+</layer-list>
