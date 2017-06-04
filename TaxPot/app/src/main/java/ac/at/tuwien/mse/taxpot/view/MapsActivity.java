@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,7 +20,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -33,17 +38,25 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import ac.at.tuwien.mse.taxpot.R;
+import ac.at.tuwien.mse.taxpot.databinding.LayoutRatingsBinding;
 import ac.at.tuwien.mse.taxpot.fragments.ReportTaxiFragment;
 import ac.at.tuwien.mse.taxpot.models.TaxPot;
 import ac.at.tuwien.mse.taxpot.service.MarkerDetailService;
@@ -67,6 +80,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FirebaseDatabase database;
 
     private ClusterManager<TaxPot> taxPotClusterManager;
+    private ClusterManager<TaxPot> filteredTaxPots;
     private Location currentLocation;
     private FloatingActionButton myLocationButton;
 
@@ -159,6 +173,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // initialize clustermanager
         taxPotClusterManager = new ClusterManager<TaxPot>(this, mMap);
+        filteredTaxPots = new ClusterManager<TaxPot>(this, mMap);
+        taxPotClusterManager.setAlgorithm(new GridBasedAlgorithm<TaxPot>());
 
         // fill map with TaxPots
         String datagv_url = getResources().getString(R.string.datagv_url);
@@ -279,7 +295,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    //TODO: make a menuService
     public void onMenuListened(MenuItem item) {
         Log.d(TAG, "MenuItem Clicked");
         if (item.getItemId() == R.id.menu_item1){
@@ -289,11 +304,103 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             final PopupWindow popupWindow = new PopupWindow(popupView, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
             popupWindow.showAsDropDown(popupView,0,0);
 
+            SeekBar driver = (SeekBar)popupView.findViewById(R.id.sliderDriver);
+            SeekBar safe = (SeekBar)popupView.findViewById(R.id.sliderSafe);
+            SeekBar taxiCount = (SeekBar)popupView.findViewById(R.id.slider_taxi);
+
+            driver.setMax(10);
+            safe.setMax(10);
+            taxiCount.setMax(10);
+
+            final TextView driverFilterNr = (TextView)popupView.findViewById(R.id.driver_filter_double);
+            final TextView safeFilterNr = (TextView)popupView.findViewById(R.id.safe_filter_double);
+            final TextView taxiCountFilterNr = (TextView)popupView.findViewById(R.id.taxi_filter_double);
+
+            final CheckBox driverCb = (CheckBox)popupView.findViewById(R.id.driver_check_box);
+            final CheckBox safeCb = (CheckBox)popupView.findViewById(R.id.safe_check_box);
+            final CheckBox taxiCountCb = (CheckBox)popupView.findViewById(R.id.taxi_check_box);
+
+            driver.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    double output = (double)progress/2;
+                    driverFilterNr.setText(String.valueOf(output));
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+
+            safe.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    double output = (double)progress/2;
+                    Log.d(TAG, progress+" "+ output);
+                    safeFilterNr.setText(String.valueOf(output));
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+
+            taxiCount.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    double output = (double)progress/2;
+                    taxiCountFilterNr.setText(String.valueOf(output));
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+
             Button toFilterBtn = (Button)popupView.findViewById(R.id.toFilter_Btn);
             toFilterBtn.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
-                    //TODO:
+                    double driver = 0;
+                    double safe = 0;
+                    double taxiCount = 0;
+
+                    if(driverCb.isChecked()){
+                        Log.d(TAG,"Driver Checkbox is checked!");
+                        driver = Double.parseDouble(driverFilterNr.getText().toString());
+                    }
+                    if(safeCb.isChecked()){
+                        Log.d(TAG,"Safety Checkbox is checked!");
+                        safe = Double.parseDouble(safeFilterNr.getText().toString());
+                    }
+                    if(taxiCountCb.isChecked()){
+                        Log.d(TAG,"Occupancy Checkbox is checked!");
+                        taxiCount = Double.parseDouble(taxiCountFilterNr.getText().toString());
+                    }
+
+                    filterSpots(driver, safe, taxiCount);
+
                     popupWindow.dismiss();
                 }
             });
@@ -335,5 +442,94 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    //TODO:
+    public void filterSpots(double driver, double safe, double occupancy){
+        int markerCount = 0;
 
+        Collection<TaxPot> taxPotCollection = taxPotClusterManager.getAlgorithm().getItems();
+        Iterator<TaxPot> taxPotIterator = taxPotCollection.iterator();
+
+        //removing works!!
+        while (taxPotIterator.hasNext()) {
+            TaxPot p = taxPotIterator.next();
+            if(markerCount<320) {
+                Log.d(TAG, "taxPot ID: " + p.getId());
+
+                taxPotIterator.remove();
+            }
+            markerCount++;
+        }
+        Log.d(TAG, "taxPot Count: "+markerCount);
+        taxPotClusterManager.setRenderer(new CustomClusterRenderer(this, mMap, taxPotClusterManager));
+        taxPotClusterManager.cluster();
+        //taxPotClusterManager.cluster();
+        /*
+        if(markerCollection.isEmpty()){
+            Log.d(TAG, "markerCollection is empty!");
+        }
+        if(markerIt == null){
+            Log.d(TAG, "markerIt is null");
+        }
+        if(!markerIt.hasNext()){
+            Log.d(TAG, "markerIt is empty");
+        }else{
+            Log.d(TAG, "markerIt is not empty!");
+        }
+
+        if(driver == 0 && safe == 0 && occupancy == 0) {
+            taxPotClusterManager.cluster();
+            while(markerIt.hasNext()){
+                Marker taxPotMarker = (Marker)markerIt.next();
+                taxPotMarker.setVisible(true);
+            }
+
+            Log.d(TAG, "All Markers visible");
+        }else{
+            filteredTaxPots.clearItems();
+
+            Collection<TaxPot> taxPotCollection = taxPotClusterManager.getAlgorithm().getItems();
+            if(taxPotCollection.isEmpty()){
+                Log.d(TAG, "taxPotCollection is empty");
+            }
+            for (TaxPot p : taxPotCollection) {
+                if (p.calculateFriendliness() >= driver &&
+                        p.calculateSafety() >= safe &&
+                        p.calculateOccupancy() >= occupancy) {
+                    Log.d(TAG, "if condition is met");
+                    filteredTaxPots.addItem(p);
+
+                    while(markerIt.hasNext()){
+                        Marker taxPotMarker = (Marker)markerIt.next();
+                        Log.d(TAG, "while");
+                        if(p.getPosition() == taxPotMarker.getPosition()){
+                            Log.d(TAG, "taxPot visible");
+                            taxPotMarker.setVisible(true);
+                        }
+                    }
+                }else{
+                    Log.d(TAG, "else condition");
+                    while(markerIt.hasNext()){
+                        Log.d(TAG, "while else");
+                        Marker taxPotMarker = (Marker)markerIt.next();
+                        if(p.getPosition() == taxPotMarker.getPosition()){
+                            Log.d(TAG, "Hiding TaxPot!");
+                            taxPotMarker.setVisible(false);
+                        }
+                    }
+                }
+
+            }
+*/
+        /*
+            taxPotClusterManager.cluster();
+            /*
+            filteredTaxPots.setOnClusterItemClickListener(new MarkerDetailService(this, googleApiClient));
+            filteredTaxPots.setRenderer(new CustomClusterRenderer(getApplicationContext(), mMap, filteredTaxPots));
+
+            mMap.setOnMarkerClickListener(filteredTaxPots);
+            mMap.setOnCameraIdleListener(filteredTaxPots);*/
+            //Log.d(TAG, "TaxPots filtered!");
+
+        //}
+    }
 }

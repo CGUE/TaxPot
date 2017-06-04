@@ -53,9 +53,8 @@ public class ReportTaxiFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("TaxPot","report button clicked");
-                //TODO:handle the input
 
-                final EditText address = (EditText) view.findViewById(R.id.input_box_address);
+                EditText address = (EditText) view.findViewById(R.id.input_box_address);
                 EditText timeframe = (EditText) view.findViewById(R.id.input_box_timeframe);
                 EditText taxiPlaceCount = (EditText) view.findViewById(R.id.input_box_taxiPlaceCount);
 
