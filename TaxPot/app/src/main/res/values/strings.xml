@@ -42,6 +42,7 @@
     <string name="default_val">keine Daten vorhanden</string>
     <string name="null_value">null</string>
 
+    <string name="no_permission">Um diese App verwenden zu können, muss die App auf Ihre Standortdaten zugreifen dürfen.</string>
     <string name="on_request_fail_message">Es ist leider ein Fehler aufgetreten.</string>
     <string name="google_directions_url">https://maps.googleapis.com/maps/api/directions/json?</string>
     <string name="google_navigation_url">google.navigation:</string>

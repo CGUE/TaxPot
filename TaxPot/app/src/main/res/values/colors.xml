@@ -4,5 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="taxpot_yellow">#ffff99</color>
+    <color name="taxpot_dark">#B8B84D</color>
+    <color name="taxpot_accent">#4966BC</color>
     <color name="white">#ffffff</color>
 </resources>
