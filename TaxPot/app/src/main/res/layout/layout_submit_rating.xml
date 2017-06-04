@@ -1,92 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/relLayout_submitR"
+        android:layout_width="300dp"
+        android:layout_height="400dp"
         android:background="@android:color/white"
-        tools:ignore="UselessParent">
+        tools:ignore="UselessParent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
 
-        <Button
-            android:id="@+id/cancel_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/taxiCountRating"
-            android:layout_toLeftOf="@+id/postCommentBtn"
-            android:layout_toStartOf="@+id/postCommentBtn"
-            android:text="@string/cancel" />
-
-        <Button
-            android:id="@+id/postCommentBtn"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="11dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginRight="30dp"
-            android:text="@string/finish" />
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp">
+            <Button
+                android:id="@+id/cancel_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:text="@string/cancel" />
 
-        <RatingBar
-            android:id="@+id/driversRating"
+             <Button
+                 android:id="@+id/postCommentBtn"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:text="@string/finish" />
+
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:orientation="vertical"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="104dp"
-            android:isIndicator="false"
-            android:stepSize="0.5" />
+            android:layout_centerVertical="true">
 
-        <RatingBar
-            android:id="@+id/safeRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/driversRating"
-            android:layout_alignStart="@+id/driversRating"
-            android:layout_centerVertical="true" />
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/driver2" />
+             <RatingBar
+                 android:id="@+id/driversRating"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentTop="true"
+                 android:layout_marginTop="10dp"
+                 android:isIndicator="false"
+                 android:stepSize="0.5" />
 
-        <RatingBar
-            android:id="@+id/taxiCountRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/postCommentBtn"
-            android:layout_alignLeft="@+id/safeRating"
-            android:layout_alignStart="@+id/safeRating"
-            android:layout_marginBottom="45dp" />
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="@string/safe2" />
+             <RatingBar
+                 android:id="@+id/safeRating"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_marginTop="10dp"
+                 android:stepSize="0.5"/>
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/driversRating"
-            android:layout_alignParentTop="true"
-            android:layout_alignStart="@+id/driversRating"
-            android:layout_marginTop="69dp"
-            android:text="@string/driver2" />
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:text="@string/taxiCount2" />
+            <RatingBar
+                android:id="@+id/taxiCountRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"/>
 
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/safeRating"
-            android:layout_alignLeft="@+id/safeRating"
-            android:layout_alignStart="@+id/safeRating"
-            android:layout_marginBottom="12dp"
-            android:text="@string/safe2" />
-
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/taxiCountRating"
-            android:layout_alignLeft="@+id/taxiCountRating"
-            android:layout_alignStart="@+id/taxiCountRating"
-            android:layout_marginBottom="14dp"
-            android:text="@string/taxiCount2" />
+        </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -301,8 +302,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.d(TAG, "Filtern clicked");
 
             View popupView = LayoutInflater.from(this).inflate(R.layout.layout_filter,null);
-            final PopupWindow popupWindow = new PopupWindow(popupView, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-            popupWindow.showAsDropDown(popupView,0,0);
+            final PopupWindow popupWindow = new PopupWindow(popupView, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+            popupWindow.showAtLocation(popupView, Gravity.CENTER,0,0);
 
             SeekBar driver = (SeekBar)popupView.findViewById(R.id.sliderDriver);
             SeekBar safe = (SeekBar)popupView.findViewById(R.id.sliderSafe);

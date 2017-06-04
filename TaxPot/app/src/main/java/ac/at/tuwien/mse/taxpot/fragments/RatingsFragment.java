@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,8 +77,8 @@ public class RatingsFragment extends Fragment {
             public void onClick(View v) {
 
                 final View popupView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_submit_rating,null);
-                popupWindow = new PopupWindow(popupView, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-                popupWindow.showAsDropDown(popupView,0,0);
+                popupWindow = new PopupWindow(popupView, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+                popupWindow.showAtLocation(popupView, Gravity.CENTER,0,0);
 
                 Button submitRatingBtn = (Button)popupView.findViewById(R.id.postCommentBtn);
                 submitRatingBtn.setOnClickListener(new View.OnClickListener(){

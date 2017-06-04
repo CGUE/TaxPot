@@ -1,124 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <SeekBar
-        android:id="@+id/slider_taxi"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/sliderSafe"
-        android:layout_alignStart="@+id/sliderSafe"
-        android:layout_below="@+id/safe_check_box"
-        android:layout_marginTop="81dp" />
-
-    <SeekBar
-        android:id="@+id/sliderDriver"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/safe_check_box"
-        android:layout_alignLeft="@+id/sliderSafe"
-        android:layout_alignStart="@+id/sliderSafe"
-        android:layout_marginBottom="30dp" />
-
-    <SeekBar
-        android:id="@+id/sliderSafe"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
+    <RelativeLayout
+        android:id="@+id/relLayout_submitR"
+        android:layout_width="300dp"
+        android:layout_height="400dp"
+        android:background="@android:color/white"
+        tools:ignore="UselessParent"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true">
 
-    <CheckBox
-        android:id="@+id/driver_check_box"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/sliderDriver"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="61dp"
-        android:layout_marginStart="61dp"
-        android:text="@string/driver" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true">
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/driver_check_box"
+                android:layout_alignLeft="@+id/driver_check_box"
+                android:layout_alignStart="@+id/driver_check_box"
+                android:text="@string/filter"
+                android:textSize="24sp" />
 
-    <CheckBox
-        android:id="@+id/safe_check_box"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/sliderSafe"
-        android:layout_alignLeft="@+id/driver_check_box"
-        android:layout_alignStart="@+id/driver_check_box"
-        android:text="@string/safe" />
+            <CheckBox
+                android:id="@+id/driver_check_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/driver"/>
 
-    <CheckBox
-        android:id="@+id/taxi_check_box"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/slider_taxi"
-        android:layout_alignLeft="@+id/safe_check_box"
-        android:layout_alignStart="@+id/safe_check_box"
-        android:layout_marginBottom="17dp"
-        android:text="@string/taxiCount" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <SeekBar
+                    android:id="@+id/sliderDriver"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"/>
 
-    <Button
-        android:id="@+id/toFilter_Btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/slider_taxi"
-        android:layout_toRightOf="@+id/slider_taxi"
-        android:text="@string/to_filter" />
+                <TextView
+                    android:id="@+id/driver_filter_double"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/zero_double" />
+            </LinearLayout>
 
-    <Button
-        android:id="@+id/cancel_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_toLeftOf="@+id/toFilter_Btn"
-        android:layout_toStartOf="@+id/toFilter_Btn"
-        android:text="@string/cancel"
-        tools:ignore="RelativeOverlap" />
+            <CheckBox
+                android:id="@+id/safe_check_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/safe"
+                android:layout_marginTop="10dp"/>
 
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/driver_check_box"
-        android:layout_alignLeft="@+id/driver_check_box"
-        android:layout_alignStart="@+id/driver_check_box"
-        android:layout_marginBottom="48dp"
-        android:text="@string/filter"
-        android:textSize="24sp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true">
+                <SeekBar
+                    android:id="@+id/sliderSafe"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"/>
 
-    <TextView
-        android:id="@+id/driver_filter_double"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/zero_double"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_alignBottom="@+id/sliderDriver"
-        android:layout_toRightOf="@+id/sliderDriver"
-        android:layout_toEndOf="@+id/sliderDriver" />
+                <TextView
+                    android:id="@+id/safe_filter_double"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/zero_double" />
+            </LinearLayout>
 
-    <TextView
-        android:id="@+id/safe_filter_double"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/zero_double"
-        android:layout_alignBottom="@+id/sliderSafe"
-        android:layout_alignLeft="@+id/driver_filter_double"
-        android:layout_alignStart="@+id/driver_filter_double" />
+            <CheckBox
+                android:id="@+id/taxi_check_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/taxiCount"
+                android:layout_marginTop="10dp"/>
 
-    <TextView
-        android:id="@+id/taxi_filter_double"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/slider_taxi"
-        android:layout_alignLeft="@+id/safe_filter_double"
-        android:layout_alignStart="@+id/safe_filter_double"
-        android:text="@string/zero_double" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <SeekBar
+                    android:id="@+id/slider_taxi"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"/>
 
-</RelativeLayout>
+                <TextView
+                    android:id="@+id/taxi_filter_double"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/zero_double" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/filterBtns"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp">
+
+            <Button
+                android:id="@+id/cancel_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"/>
+
+            <Button
+                android:id="@+id/toFilter_Btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/to_filter" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
