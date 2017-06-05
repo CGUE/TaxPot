@@ -53,6 +53,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -81,7 +82,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FirebaseDatabase database;
 
     private ClusterManager<TaxPot> taxPotClusterManager;
-    private ClusterManager<TaxPot> filteredTaxPots;
+    private ArrayList<TaxPot> allTaxPots;
     private Location currentLocation;
     private FloatingActionButton myLocationButton;
 
@@ -174,7 +175,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // initialize clustermanager
         taxPotClusterManager = new ClusterManager<TaxPot>(this, mMap);
-        filteredTaxPots = new ClusterManager<TaxPot>(this, mMap);
+        allTaxPots = new ArrayList<>();
         taxPotClusterManager.setAlgorithm(new GridBasedAlgorithm<TaxPot>());
 
         // fill map with TaxPots
@@ -241,6 +242,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 spot.setParkingSpace(properties.getString("STELLPLATZANZAHL"));
 
             taxPotClusterManager.addItem(spot);
+            allTaxPots.add(spot);
         }
 
         mMap.moveCamera(CameraUpdateFactory.zoomIn());
@@ -443,24 +445,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    //TODO:
     public void filterSpots(double driver, double safe, double occupancy){
         int markerCount = 0;
 
         Collection<TaxPot> taxPotCollection = taxPotClusterManager.getAlgorithm().getItems();
         Iterator<TaxPot> taxPotIterator = taxPotCollection.iterator();
+        taxPotClusterManager.clearItems();
 
-        //removing works!!
-        while (taxPotIterator.hasNext()) {
-            TaxPot p = taxPotIterator.next();
-            if(markerCount<320) {
-                Log.d(TAG, "taxPot ID: " + p.getId());
+        Iterator<TaxPot> allTaxPotsIt = allTaxPots.iterator();
 
-                taxPotIterator.remove();
+
+
+        while(allTaxPotsIt.hasNext()){
+            TaxPot p = allTaxPotsIt.next();
+
+            if(p.calculateFriendliness()>= driver && p.calculateSafety() >= safe &&
+                    p.calculateOccupancy()>= occupancy){
+                Log.d(TAG,p.getId());
+                taxPotClusterManager.addItem(p);
             }
+        }
+
+        for(TaxPot p : taxPotCollection){
             markerCount++;
         }
-        Log.d(TAG, "taxPot Count: "+markerCount);
+
+        Log.d(TAG, "gvdata size: " + allTaxPots.size());
+        Log.d(TAG, "Clustermanager marker size:  "+taxPotClusterManager.getMarkerCollection().getMarkers().size());
+        Log.d(TAG, "MarkerCount: " + markerCount);
         taxPotClusterManager.setRenderer(new CustomClusterRenderer(this, mMap, taxPotClusterManager));
         taxPotClusterManager.cluster();
         //taxPotClusterManager.cluster();
