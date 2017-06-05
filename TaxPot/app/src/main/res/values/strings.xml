@@ -35,7 +35,8 @@
 
     <string name="report_title">Neuen Taxistand Melden</string>
     <string name="address">Adresse</string>
-    <string name="timeframe">Zeitraum</string>
+    <string name="timeframe">Zeitraum von</string>
+    <string name="timeframe2">Zeitraum bis</string>
     <string name="taxiPlaceCount">Stellenplatzanzahl</string>
     <string name="report_Btn">Melden</string>
 

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ac.at.tuwien.mse.taxpot.R;
+import ac.at.tuwien.mse.taxpot.models.Report;
 import ac.at.tuwien.mse.taxpot.models.TaxPot;
 import ac.at.tuwien.mse.taxpot.view.MapsActivity;
 
@@ -30,7 +31,7 @@ import ac.at.tuwien.mse.taxpot.view.MapsActivity;
 
 public class ReportTaxiFragment extends Fragment {
     private TaxPot taxPot;
-    private static int id;
+    private Report report;
 
     @Nullable
     @Override
@@ -38,6 +39,7 @@ public class ReportTaxiFragment extends Fragment {
         final View view = inflater.inflate(R.layout.layout_reporttaxi, container, false);
 
         taxPot = new TaxPot();
+        report = new Report();
 
         final MapsActivity mainActivity = (MapsActivity) getActivity();
         if(mainActivity.getmMap() != null){
@@ -48,35 +50,27 @@ public class ReportTaxiFragment extends Fragment {
         }
 
 
-        Button reportButton = (Button)view.findViewById(R.id.report_button);
+        final Button reportButton = (Button)view.findViewById(R.id.report_button);
         reportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("TaxPot","report button clicked");
 
-                EditText address = (EditText) view.findViewById(R.id.input_box_address);
-                EditText timeframe = (EditText) view.findViewById(R.id.input_box_timeframe);
-                EditText taxiPlaceCount = (EditText) view.findViewById(R.id.input_box_taxiPlaceCount);
+                String address = ((EditText) view.findViewById(R.id.input_box_address)).getText().toString();
+                String timeframe = ((EditText) view.findViewById(R.id.input_box_timeframe)).getText().toString();
+                String timeframe2 = ((EditText) view.findViewById(R.id.input_box_timeframe2)).getText().toString();
+                String taxiPlaceCount = ((EditText) view.findViewById(R.id.input_box_taxiPlaceCount)).getText().toString();
 
-                taxPot.setId("Report"+id);
-                taxPot.setAddress(address.getText().toString());
-                taxPot.setServiceTime(timeframe.getText().toString());
-                taxPot.setParkingSpace(taxiPlaceCount.getText().toString());
+                final DatabaseReference reportIdRef = mainActivity.getDatabase().getReference().child("Reports");
 
-                // report new Taxi to database
-                final DatabaseReference addressRef = mainActivity.getDatabase().getReference().child("Reports").child(taxPot.getId()).child("address");
-                final DatabaseReference timeframeRef = mainActivity.getDatabase().getReference().child("Reports").child(taxPot.getId()).child("timeframe");
-                final DatabaseReference taxiPlaceCountRef = mainActivity.getDatabase().getReference().child("Reports").child(taxPot.getId()).child("taxiplaceCount");
-                addressRef.setValue(address.getText().toString());
-                timeframeRef.setValue(timeframe.getText().toString());
-                taxiPlaceCountRef.setValue(taxiPlaceCount.getText().toString());
+                report.setStreetname(address);
+                report.setOccupancy(Integer.parseInt(taxiPlaceCount));
+                report.setTimeframe(timeframe+" - " + timeframe2);
 
+                reportIdRef.push().setValue(report);
 
-                //reportRef.setValue(taxPot.getAddress());
                 Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.taxi_reported), Toast.LENGTH_LONG).show();
                 getFragmentManager().popBackStack();
-
-                id++;
             }
         });
 
