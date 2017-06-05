@@ -44,6 +44,14 @@ public class CommentsFragment extends Fragment {
             mainActivity.getMyLocationButton().hide();
         }
 
+        binding.rlComments.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Log.d("TaxPot", "outside comments layout touched");
+                mainActivity.getFragmentManager().popBackStack();
+            }
+        });
+
         final DatabaseReference myRef = mainActivity.getDatabase().getReference();
 
         RecyclerView commentSection = binding.commentSection;

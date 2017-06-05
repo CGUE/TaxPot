@@ -3,6 +3,8 @@ package ac.at.tuwien.mse.taxpot.fragments;
 import android.app.Fragment;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +63,15 @@ public class RatingsFragment extends Fragment {
             mainActivity.getMyLocationButton().hide();
         }
 
+        binding.rlRatings.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Log.d("TaxPot", "outside clicked");
+                mainActivity.getFragmentManager().popBackStack();
+            }
+        });
+
         binding.driversRating.setMax(5);
         binding.driversRating.setClickable(false);
         Log.d("Rating", "friendliness: "+binding.driversRating.getRating());
@@ -77,7 +89,11 @@ public class RatingsFragment extends Fragment {
             public void onClick(View v) {
 
                 final View popupView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_submit_rating,null);
-                popupWindow = new PopupWindow(popupView, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+                popupWindow = new PopupWindow(popupView, WindowManager.LayoutParams.WRAP_CONTENT,
+                        WindowManager.LayoutParams.WRAP_CONTENT,true);
+
+                popupWindow.setOutsideTouchable(true);
+                popupWindow.setBackgroundDrawable(new ColorDrawable(Color.RED));
                 popupWindow.showAtLocation(popupView, Gravity.CENTER,0,0);
 
                 Button submitRatingBtn = (Button)popupView.findViewById(R.id.postCommentBtn);

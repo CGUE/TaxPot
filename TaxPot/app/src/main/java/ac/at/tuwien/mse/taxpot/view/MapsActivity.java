@@ -6,6 +6,9 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +21,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -85,6 +89,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ArrayList<TaxPot> allTaxPots;
     private Location currentLocation;
     private FloatingActionButton myLocationButton;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -303,9 +309,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (item.getItemId() == R.id.menu_item1){
             Log.d(TAG, "Filtern clicked");
 
-            View popupView = LayoutInflater.from(this).inflate(R.layout.layout_filter,null);
-            final PopupWindow popupWindow = new PopupWindow(popupView, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+            final View popupView = LayoutInflater.from(this).inflate(R.layout.layout_filter,null);
+            final PopupWindow popupWindow = new PopupWindow(popupView,
+                    WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT,true);
+
+            popupWindow.setOutsideTouchable(true);
+            popupWindow.setBackgroundDrawable(new ColorDrawable(Color.RED));
             popupWindow.showAtLocation(popupView, Gravity.CENTER,0,0);
+
 
             SeekBar driver = (SeekBar)popupView.findViewById(R.id.sliderDriver);
             SeekBar safe = (SeekBar)popupView.findViewById(R.id.sliderSafe);
@@ -454,8 +465,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Iterator<TaxPot> allTaxPotsIt = allTaxPots.iterator();
 
-
-
         while(allTaxPotsIt.hasNext()){
             TaxPot p = allTaxPotsIt.next();
 
@@ -475,74 +484,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, "MarkerCount: " + markerCount);
         taxPotClusterManager.setRenderer(new CustomClusterRenderer(this, mMap, taxPotClusterManager));
         taxPotClusterManager.cluster();
-        //taxPotClusterManager.cluster();
-        /*
-        if(markerCollection.isEmpty()){
-            Log.d(TAG, "markerCollection is empty!");
-        }
-        if(markerIt == null){
-            Log.d(TAG, "markerIt is null");
-        }
-        if(!markerIt.hasNext()){
-            Log.d(TAG, "markerIt is empty");
-        }else{
-            Log.d(TAG, "markerIt is not empty!");
-        }
-
-        if(driver == 0 && safe == 0 && occupancy == 0) {
-            taxPotClusterManager.cluster();
-            while(markerIt.hasNext()){
-                Marker taxPotMarker = (Marker)markerIt.next();
-                taxPotMarker.setVisible(true);
-            }
-
-            Log.d(TAG, "All Markers visible");
-        }else{
-            filteredTaxPots.clearItems();
-
-            Collection<TaxPot> taxPotCollection = taxPotClusterManager.getAlgorithm().getItems();
-            if(taxPotCollection.isEmpty()){
-                Log.d(TAG, "taxPotCollection is empty");
-            }
-            for (TaxPot p : taxPotCollection) {
-                if (p.calculateFriendliness() >= driver &&
-                        p.calculateSafety() >= safe &&
-                        p.calculateOccupancy() >= occupancy) {
-                    Log.d(TAG, "if condition is met");
-                    filteredTaxPots.addItem(p);
-
-                    while(markerIt.hasNext()){
-                        Marker taxPotMarker = (Marker)markerIt.next();
-                        Log.d(TAG, "while");
-                        if(p.getPosition() == taxPotMarker.getPosition()){
-                            Log.d(TAG, "taxPot visible");
-                            taxPotMarker.setVisible(true);
-                        }
-                    }
-                }else{
-                    Log.d(TAG, "else condition");
-                    while(markerIt.hasNext()){
-                        Log.d(TAG, "while else");
-                        Marker taxPotMarker = (Marker)markerIt.next();
-                        if(p.getPosition() == taxPotMarker.getPosition()){
-                            Log.d(TAG, "Hiding TaxPot!");
-                            taxPotMarker.setVisible(false);
-                        }
-                    }
-                }
-
-            }
-*/
-        /*
-            taxPotClusterManager.cluster();
-            /*
-            filteredTaxPots.setOnClusterItemClickListener(new MarkerDetailService(this, googleApiClient));
-            filteredTaxPots.setRenderer(new CustomClusterRenderer(getApplicationContext(), mMap, filteredTaxPots));
-
-            mMap.setOnMarkerClickListener(filteredTaxPots);
-            mMap.setOnCameraIdleListener(filteredTaxPots);*/
-            //Log.d(TAG, "TaxPots filtered!");
-
-        //}
     }
 }

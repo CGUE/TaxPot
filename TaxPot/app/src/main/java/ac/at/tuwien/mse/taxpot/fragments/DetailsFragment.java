@@ -40,13 +40,21 @@ public class DetailsFragment extends Fragment {
         taxPot = (TaxPot) getArguments().getSerializable("taxpot");
         binding.setTaxpot(taxPot);
 
-        MapsActivity mainActivity = (MapsActivity) getActivity();
+        final MapsActivity mainActivity = (MapsActivity) getActivity();
         if(mainActivity.getmMap() != null){
             mainActivity.getmMap().getUiSettings().setAllGesturesEnabled(false);
         }
         if(mainActivity.getMyLocationButton() != null) {
             mainActivity.getMyLocationButton().hide();
         }
+
+        binding.rlDetails.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Log.d("TaxPot", "outside Details Layout touched!");
+                mainActivity.getFragmentManager().popBackStack();
+            }
+        });
 
         binding.navigationButton.setOnClickListener(new View.OnClickListener() {
             @Override

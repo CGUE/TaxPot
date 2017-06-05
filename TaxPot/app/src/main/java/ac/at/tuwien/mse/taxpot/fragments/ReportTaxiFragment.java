@@ -49,6 +49,14 @@ public class ReportTaxiFragment extends Fragment {
             mainActivity.getMyLocationButton().hide();
         }
 
+        view.findViewById(R.id.rl_report).setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Log.d("TaxPot", "outside of report layout touched!");
+                mainActivity.getFragmentManager().popBackStack();
+            }
+        });
+
 
         final Button reportButton = (Button)view.findViewById(R.id.report_button);
         reportButton.setOnClickListener(new View.OnClickListener() {
