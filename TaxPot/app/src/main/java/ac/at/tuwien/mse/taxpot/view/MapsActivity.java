@@ -62,7 +62,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import ac.at.tuwien.mse.taxpot.R;
-import ac.at.tuwien.mse.taxpot.databinding.LayoutRatingsBinding;
 import ac.at.tuwien.mse.taxpot.fragments.ReportTaxiFragment;
 import ac.at.tuwien.mse.taxpot.models.TaxPot;
 import ac.at.tuwien.mse.taxpot.service.MarkerDetailService;
@@ -468,8 +467,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         while(allTaxPotsIt.hasNext()){
             TaxPot p = allTaxPotsIt.next();
 
-            if(p.calculateFriendliness()>= driver && p.calculateSafety() >= safe &&
-                    p.calculateOccupancy()>= occupancy){
+            if(p.getAvgFriendliness()>= driver && p.getAvgSafety() >= safe &&
+                    p.getAvgOccupancy()>= occupancy){
                 Log.d(TAG,p.getId());
                 taxPotClusterManager.addItem(p);
             }

@@ -30,13 +30,58 @@ public class TaxPot implements ClusterItem, Serializable, Observable{
     private String duration;
 
     // rating variables
+    private float avgRating;
+    private float avgFriendliness;
+    private float avgSafety;
+    private float avgOccupancy;
+
     private List<Double> friendliness;
     private List<Double> safety;
     private List<Double> occupancy;
 
     @Bindable
+    public float getAvgRating() {
+        return avgRating;
+    }
+
+    @Bindable
+    public float getAvgFriendliness() {
+        return avgFriendliness;
+    }
+
+    @Bindable
+    public float getAvgSafety() {
+        return avgSafety;
+    }
+
+    @Bindable
+    public float getAvgOccupancy() {
+        return avgOccupancy;
+    }
+
+    @Bindable
     public String getDuration() {
         return duration;
+    }
+
+    public void setAvgRating(float avgRating) {
+        this.avgRating = avgRating;
+        registry.notifyChange(this, BR.avgRating);
+    }
+
+    public void setAvgFriendliness(float avgFriendliness) {
+        this.avgFriendliness = avgFriendliness;
+        registry.notifyChange(this, BR.avgFriendliness);
+    }
+
+    public void setAvgSafety(float avgSafety) {
+        this.avgSafety = avgSafety;
+        registry.notifyChange(this, BR.avgSafety);
+    }
+
+    public void setAvgOccupancy(float avgOccupancy) {
+        this.avgOccupancy = avgOccupancy;
+        registry.notifyChange(this, BR.avgOccupancy);
     }
 
     public String getId() {
@@ -116,43 +161,43 @@ public class TaxPot implements ClusterItem, Serializable, Observable{
         this.occupancy = occupancy;
     }
 
-    public float calculateFriendliness(){
+    public void calculateFriendliness(){
         if(friendliness == null || friendliness.size() == 0){
-            return 0.f;
+            setAvgFriendliness(0.f);
         }
 
         float sum = 0;
         for(Double val : friendliness){
             sum += val;
         }
-        return sum/friendliness.size();
+        setAvgFriendliness((sum/friendliness.size()));
     }
 
-    public float calculateSafety(){
+    public void calculateSafety(){
         if(safety == null || safety.size() == 0){
-            return 0.f;
+            setAvgSafety(0.f);
         }
 
         float sum = 0;
         for(Double val : safety){
             sum += val;
         }
-        return sum/safety.size();
+        setAvgSafety((sum/safety.size()));
     }
 
-    public float calculateOccupancy(){
+    public void calculateOccupancy(){
         if(occupancy == null || occupancy.size() == 0){
-            return 0.f;
+            setAvgOccupancy(0.f);
         }
 
         float sum = 0;
         for(Double val : occupancy){
             sum += val;
         }
-        return sum/occupancy.size();
+        setAvgOccupancy((sum/occupancy.size()));
     }
 
-    public float calculateAvgRating(){
+    public void calculateAvgRating(){
         float sumFriendliness = 0;
         float sumSafety = 0;
         float sumOccupancy = 0;
@@ -182,7 +227,7 @@ public class TaxPot implements ClusterItem, Serializable, Observable{
         sumSafety = safety.size() > 0 ? sumSafety / safety.size() : 0;
         sumOccupancy = occupancy.size() > 0 ? sumOccupancy / occupancy.size() : 0;
 
-        return (sumFriendliness + sumSafety + sumOccupancy) / 3;
+        setAvgRating((sumFriendliness + sumSafety + sumOccupancy) / 3);
     }
 
     @Override

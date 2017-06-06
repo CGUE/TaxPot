@@ -33,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,9 +52,16 @@ public class MarkerDetailService implements ClusterManager.OnClusterItemClickLis
     private MapsActivity mainActivity;
     private GoogleApiClient googleApiClient;
 
+    private Map<String, Boolean> ratingStates = new HashMap<>();
+
     public MarkerDetailService(MapsActivity mainActivity, GoogleApiClient googleApiClient){
         this.mainActivity = mainActivity;
         this.googleApiClient = googleApiClient;
+
+        // observe initialization states
+        ratingStates.put("friendliness", false);
+        ratingStates.put("safety", false);
+        ratingStates.put("occupancy", false);
     }
 
     @Override
@@ -78,10 +86,12 @@ public class MarkerDetailService implements ClusterManager.OnClusterItemClickLis
                 GenericTypeIndicator<List<Double>> type = new GenericTypeIndicator<List<Double>>() {};
                 if(!dataSnapshot.exists()){
                     taxPot.setFriendliness(new ArrayList<Double>());
-                    return;
+                } else {
+                    List<Double> ratings = dataSnapshot.getValue(type);
+                    taxPot.setFriendliness(ratings);
                 }
-                List<Double> ratings = dataSnapshot.getValue(type);
-                taxPot.setFriendliness(ratings);
+                taxPot.calculateFriendliness();
+                taxPot.calculateAvgRating();
             }
 
             @Override
@@ -96,10 +106,12 @@ public class MarkerDetailService implements ClusterManager.OnClusterItemClickLis
                 GenericTypeIndicator<List<Double>> type = new GenericTypeIndicator<List<Double>>() {};
                 if(!dataSnapshot.exists()){
                     taxPot.setSafety(new ArrayList<Double>());
-                    return;
+                } else {
+                    List<Double> ratings = dataSnapshot.getValue(type);
+                    taxPot.setSafety(ratings);
                 }
-                List<Double> ratings = dataSnapshot.getValue(type);
-                taxPot.setSafety(ratings);
+                taxPot.calculateSafety();
+                taxPot.calculateAvgRating();
             }
 
             @Override
@@ -114,10 +126,12 @@ public class MarkerDetailService implements ClusterManager.OnClusterItemClickLis
                 GenericTypeIndicator<List<Double>> type = new GenericTypeIndicator<List<Double>>() {};
                 if(!dataSnapshot.exists()){
                     taxPot.setOccupancy(new ArrayList<Double>());
-                    return;
+                } else {
+                    List<Double> ratings = dataSnapshot.getValue(type);
+                    taxPot.setOccupancy(ratings);
                 }
-                List<Double> ratings = dataSnapshot.getValue(type);
-                taxPot.setOccupancy(ratings);
+                taxPot.calculateOccupancy();
+                taxPot.calculateAvgRating();
             }
 
             @Override

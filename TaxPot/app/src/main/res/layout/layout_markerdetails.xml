@@ -111,7 +111,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:numStars="5"
-                            android:rating="@{taxpot.calculateAvgRating()}"
+                            android:rating="@{taxpot.avgRating}"
                             android:layout_below="@+id/header"
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true" />
@@ -126,7 +126,7 @@
                             android:layout_marginLeft="10dp"
                             android:ems="10"
                             android:inputType="textPersonName"
-                            android:text="@{@string/generic_avg_rating(taxpot.calculateAvgRating())}"
+                            android:text="@{@string/generic_avg_rating(taxpot.avgRating)}"
                             android:textSize="@dimen/detailfragment_text"
                             tools:ignore="SpUsage,TextViewEdits" />
                     </LinearLayout>
