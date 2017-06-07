@@ -85,7 +85,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FloatingSearchView searchBar;
 
     private FirebaseDatabase database;
-    private boolean connected;
 
     private ClusterManager<TaxPot> taxPotClusterManager;
     private HashMap<String,TaxPot> allTaxPots;

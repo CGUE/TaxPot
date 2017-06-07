@@ -125,7 +125,6 @@ public class RatingsFragment extends Fragment {
                 final DatabaseReference friendlinessRef = mainActivity.getDatabase().getReference().child(taxPot.getId()).child("friendliness");
                 final DatabaseReference safetyRef = mainActivity.getDatabase().getReference().child(taxPot.getId()).child("safety");
                 final DatabaseReference occupancyRef = mainActivity.getDatabase().getReference().child(taxPot.getId()).child("occupancy");
-                final List<Boolean> states = new ArrayList<Boolean>();
 
                 friendlinessRef.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -203,11 +202,7 @@ public class RatingsFragment extends Fragment {
                     occupancyRef.setValue(taxPot.getOccupancy());
                 }
                 popupWindow.dismiss();
-                if(states.isEmpty()){
-                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.rating_not_submitted), Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.rating_submitted), Toast.LENGTH_LONG).show();
-                }
+                Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.rating_submitted), Toast.LENGTH_LONG).show();
                 getFragmentManager().popBackStack();
             }
         });

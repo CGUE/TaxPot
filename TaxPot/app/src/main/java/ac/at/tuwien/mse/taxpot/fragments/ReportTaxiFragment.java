@@ -79,6 +79,10 @@ public class ReportTaxiFragment extends Fragment {
 
                 Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.taxi_reported), Toast.LENGTH_LONG).show();
                 getFragmentManager().popBackStack();
+
+                if(mainActivity.getmMap() != null){
+                    mainActivity.getmMap().getUiSettings().setAllGesturesEnabled(true);
+                }
             }
         });
 

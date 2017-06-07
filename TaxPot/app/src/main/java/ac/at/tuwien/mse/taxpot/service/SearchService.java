@@ -83,6 +83,8 @@ public class SearchService implements FloatingSearchView.OnQueryChangeListener,
                     Place place = it.next();
 
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(place.getLatLng()));
+                    mMap.moveCamera(CameraUpdateFactory.zoomTo(15.f));
+
                     if(positionMarker == null)
                         positionMarker = mMap.addMarker(new MarkerOptions()
                                                         .position(place.getLatLng())

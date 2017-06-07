@@ -113,12 +113,20 @@
                 android:id="@+id/cancel_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/cancel"/>
+                android:layout_margin="10dp"
+                android:padding="5dp"
+                android:background="@color/taxpot_yellow"
+                android:backgroundTint="@color/taxpot_yellow"
+                android:text="@string/cancel" />
 
             <Button
                 android:id="@+id/toFilter_Btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:padding="5dp"
+                android:background="@color/taxpot_yellow"
+                android:backgroundTint="@color/taxpot_yellow"
                 android:text="@string/to_filter" />
         </LinearLayout>
 
