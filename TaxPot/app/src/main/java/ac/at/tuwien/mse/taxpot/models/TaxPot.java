@@ -164,6 +164,7 @@ public class TaxPot implements ClusterItem, Serializable, Observable{
     public void calculateFriendliness(){
         if(friendliness == null || friendliness.size() == 0){
             setAvgFriendliness(0.f);
+            return;
         }
 
         float sum = 0;
@@ -176,6 +177,7 @@ public class TaxPot implements ClusterItem, Serializable, Observable{
     public void calculateSafety(){
         if(safety == null || safety.size() == 0){
             setAvgSafety(0.f);
+            return;
         }
 
         float sum = 0;
@@ -188,6 +190,7 @@ public class TaxPot implements ClusterItem, Serializable, Observable{
     public void calculateOccupancy(){
         if(occupancy == null || occupancy.size() == 0){
             setAvgOccupancy(0.f);
+            return;
         }
 
         float sum = 0;

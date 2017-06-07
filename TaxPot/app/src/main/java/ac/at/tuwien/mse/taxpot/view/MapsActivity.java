@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -42,7 +43,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
 
@@ -52,7 +58,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import ac.at.tuwien.mse.taxpot.R;
 import ac.at.tuwien.mse.taxpot.fragments.ReportTaxiFragment;
@@ -79,7 +88,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private boolean connected;
 
     private ClusterManager<TaxPot> taxPotClusterManager;
-    private ArrayList<TaxPot> allTaxPots;
+    private HashMap<String,TaxPot> allTaxPots;
     private Location currentLocation;
     private FloatingActionButton myLocationButton;
 
@@ -180,8 +189,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // initialize clustermanager
         taxPotClusterManager = new ClusterManager<TaxPot>(this, mMap);
-        allTaxPots = new ArrayList<>();
+        allTaxPots = new HashMap<>();
         taxPotClusterManager.setAlgorithm(new GridBasedAlgorithm<TaxPot>());
+
+
 
         // fill map with TaxPots
         String datagv_url = getResources().getString(R.string.datagv_url);
@@ -229,7 +240,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void parseDatagvResponse(JSONObject json) throws JSONException {
         JSONArray features = json.getJSONArray("features");
-
+        TaxPot spot;
         for (int i = 0; i < features.length(); i++) {
             JSONObject feature = (JSONObject) features.get(i);
             JSONObject properties = feature.getJSONObject("properties");
@@ -238,7 +249,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             JSONArray coordinates = geometryInfo.getJSONArray("coordinates");
             JSONArray latLngInfo = coordinates.getJSONArray(0);
 
-            TaxPot spot = new TaxPot();
+            spot = new TaxPot();
             spot.setId(feature.getString("id").replace(".", ""));
 
             if (properties.get("ADRESSE") != null)
@@ -255,8 +266,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 spot.setParkingSpace(properties.getString("STELLPLATZANZAHL"));
 
             taxPotClusterManager.addItem(spot);
-            allTaxPots.add(spot);
+            allTaxPots.put(spot.getId(),spot);
         }
+
+        initSpotInfos();
 
         mMap.moveCamera(CameraUpdateFactory.zoomIn());
     }
@@ -323,7 +336,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void onMenuListened(MenuItem item) {
-        Log.d(TAG, "MenuItem Clicked");
+        //Log.d(TAG, "MenuItem Clicked");
         if (item.getItemId() == R.id.menu_item1){
             Log.d(TAG, "Filtern clicked");
 
@@ -419,15 +432,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     double taxiCount = 0;
 
                     if(driverCb.isChecked()){
-                        Log.d(TAG,"Driver Checkbox is checked!");
+                        //Log.d(TAG,"Driver Checkbox is checked!");
                         driver = Double.parseDouble(driverFilterNr.getText().toString());
                     }
                     if(safeCb.isChecked()){
-                        Log.d(TAG,"Safety Checkbox is checked!");
+                        //Log.d(TAG,"Safety Checkbox is checked!");
                         safe = Double.parseDouble(safeFilterNr.getText().toString());
                     }
                     if(taxiCountCb.isChecked()){
-                        Log.d(TAG,"Occupancy Checkbox is checked!");
+                        //Log.d(TAG,"Occupancy Checkbox is checked!");
                         taxiCount = Double.parseDouble(taxiCountFilterNr.getText().toString());
                     }
 
@@ -478,29 +491,88 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         int markerCount = 0;
 
         Collection<TaxPot> taxPotCollection = taxPotClusterManager.getAlgorithm().getItems();
-        Iterator<TaxPot> taxPotIterator = taxPotCollection.iterator();
         taxPotClusterManager.clearItems();
 
-        Iterator<TaxPot> allTaxPotsIt = allTaxPots.iterator();
-
-        while(allTaxPotsIt.hasNext()){
-            TaxPot p = allTaxPotsIt.next();
+        Iterator it = allTaxPots.entrySet().iterator();
+        while (it.hasNext()){
+            Map.Entry entry = (Map.Entry)it.next();
+            TaxPot p = (TaxPot)entry.getValue();
 
             if(p.getAvgFriendliness()>= driver && p.getAvgSafety() >= safe &&
-                    p.getAvgOccupancy()>= occupancy){
-                Log.d(TAG,p.getId());
+                    p.getAvgOccupancy()>= occupancy) {
+                Log.d(TAG, p.getId());
                 taxPotClusterManager.addItem(p);
             }
         }
-
         for(TaxPot p : taxPotCollection){
+
             markerCount++;
         }
 
-        Log.d(TAG, "gvdata size: " + allTaxPots.size());
-        Log.d(TAG, "Clustermanager marker size:  "+taxPotClusterManager.getMarkerCollection().getMarkers().size());
+        //Log.d(TAG, "gvdata size: " + allTaxPots.size());
+        //Log.d(TAG, "Clustermanager marker size:  "+taxPotClusterManager.getMarkerCollection().getMarkers().size());
         Log.d(TAG, "MarkerCount: " + markerCount);
         taxPotClusterManager.setRenderer(new CustomClusterRenderer(this, mMap, taxPotClusterManager));
         taxPotClusterManager.cluster();
+    }
+
+    private void initSpotInfos(){
+        final DatabaseReference myRef = database.getReference();
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot data : dataSnapshot.getChildren()){
+                    if (!data.getKey().equals("Reports")) {
+                        TaxPot currentSpot = allTaxPots.get(data.getKey());
+                        currentSpot.calculateAvgRating();
+                        if(data.hasChild("friendliness")){
+                            DataSnapshot friendlinessData = data.child("friendliness");
+
+                            for(DataSnapshot ratings : friendlinessData.getChildren()){
+                                Long rating = ratings.getValue(Long.class);
+                                Double dRating = rating.doubleValue();
+
+                                currentSpot.getFriendliness().add(dRating);
+
+                            }
+                        }
+
+                        if(data.hasChild("safety")){
+                            DataSnapshot safetyData = data.child("safety");
+
+                            for(DataSnapshot ratings : safetyData.getChildren()){
+                                Long rating = ratings.getValue(Long.class);
+                                Double dRating = rating.doubleValue();
+
+                                currentSpot.getSafety().add(dRating);
+
+                            }
+                        }
+
+                        if(data.hasChild("occupancy")){
+                            DataSnapshot occupancyData = data.child("occupancy");
+
+                            for(DataSnapshot ratings : occupancyData.getChildren()){
+                                Long rating = ratings.getValue(Long.class);
+                                Double dRating = rating.doubleValue();
+
+                                currentSpot.getOccupancy().add(dRating);
+                            }
+                        }
+
+                        currentSpot.calculateFriendliness();
+                        currentSpot.calculateSafety();
+                        currentSpot.calculateOccupancy();
+                        currentSpot.calculateAvgRating();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }
