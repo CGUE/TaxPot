@@ -11,9 +11,7 @@
         android:layout_width="300dp"
         android:layout_height="400dp"
         android:background="@android:color/white"
-        tools:ignore="UselessParent"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true">
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -25,9 +23,6 @@
                 android:id="@+id/textView7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/driver_check_box"
-                android:layout_alignLeft="@+id/driver_check_box"
-                android:layout_alignStart="@+id/driver_check_box"
                 android:text="@string/filter"
                 android:textSize="24sp" />
 
@@ -62,8 +57,7 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true">
+                android:layout_height="wrap_content">
                 <SeekBar
                     android:id="@+id/sliderSafe"
                     android:layout_width="200dp"
@@ -107,19 +101,22 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            tools:ignore="RtlHardcoded">
 
             <Button
                 android:id="@+id/cancel_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/cancel"/>
+                android:text="@string/cancel"
+                tools:ignore="ButtonStyle" />
 
             <Button
                 android:id="@+id/toFilter_Btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/to_filter" />
+                android:text="@string/to_filter"
+                tools:ignore="ButtonStyle" />
         </LinearLayout>
 
     </RelativeLayout>

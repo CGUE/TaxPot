@@ -204,9 +204,9 @@ public class RatingsFragment extends Fragment {
                 }
                 popupWindow.dismiss();
                 if(states.isEmpty()){
-                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.rating_not_submitted), Toast.LENGTH_LONG).show();
-                } else {
                     Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.rating_submitted), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.rating_not_submitted), Toast.LENGTH_LONG).show();
                 }
                 getFragmentManager().popBackStack();
             }

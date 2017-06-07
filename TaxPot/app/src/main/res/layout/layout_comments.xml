@@ -109,8 +109,6 @@
                         android:id="@+id/comment_section"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_above="@+id/postCommentBtn"
-                        android:layout_below="@+id/header_container"
                         android:orientation="vertical"
                         tools:listitem="@layout/viewholder_comment" />
 

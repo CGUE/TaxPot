@@ -10,9 +10,7 @@
         android:layout_width="300dp"
         android:layout_height="400dp"
         android:background="@android:color/white"
-        tools:ignore="UselessParent"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true">
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -20,19 +18,22 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            tools:ignore="RtlHardcoded">
             <Button
                 android:id="@+id/cancel_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="15dp"
-                android:text="@string/cancel" />
+                android:text="@string/cancel"
+                tools:ignore="ButtonStyle" />
 
              <Button
                  android:id="@+id/postCommentBtn"
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
-                 android:text="@string/finish" />
+                 android:text="@string/finish"
+                 tools:ignore="ButtonStyle" />
 
         </LinearLayout>
         <LinearLayout
@@ -46,15 +47,14 @@
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="10dp"
-                android:text="@string/driver2" />
+                android:text="@string/driver2"
+                tools:ignore="RtlHardcoded" />
              <RatingBar
                  android:id="@+id/driversRating"
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
-                 android:layout_alignParentTop="true"
                  android:layout_marginTop="10dp"
                  android:isIndicator="false"
                  android:stepSize="0.5" />
@@ -64,7 +64,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="@string/safe2" />
+                android:text="@string/safe2"
+                tools:ignore="RtlHardcoded" />
              <RatingBar
                  android:id="@+id/safeRating"
                  android:layout_width="wrap_content"
@@ -78,7 +79,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="5dp"
-                android:text="@string/taxiCount2" />
+                android:text="@string/taxiCount2"
+                tools:ignore="RtlHardcoded" />
             <RatingBar
                 android:id="@+id/taxiCountRating"
                 android:layout_width="wrap_content"
