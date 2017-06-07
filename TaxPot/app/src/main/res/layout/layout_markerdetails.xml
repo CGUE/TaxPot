@@ -73,7 +73,7 @@
                         android:text="@{taxpot.duration}"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/detailfragment_text"
-                        tools:ignore="SpUsage,TextViewEdits" />
+                        tools:ignore="RtlHardcoded,SpUsage,TextViewEdits" />
 
                     <Button
                         android:id="@+id/rating_button"
@@ -141,7 +141,7 @@
                             android:inputType="textPersonName"
                             android:text="@{@string/generic_avg_rating(taxpot.avgRating)}"
                             android:textSize="@dimen/detailfragment_text"
-                            tools:ignore="SpUsage,TextViewEdits" />
+                            tools:ignore="RtlHardcoded,SpUsage,TextViewEdits" />
                     </LinearLayout>
 
                 </RelativeLayout>
