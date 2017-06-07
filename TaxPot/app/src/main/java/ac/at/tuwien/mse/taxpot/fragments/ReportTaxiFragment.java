@@ -53,6 +53,9 @@ public class ReportTaxiFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("TaxPot", "outside of report layout touched!");
+                if(mainActivity.getmMap() != null){
+                    mainActivity.getmMap().getUiSettings().setAllGesturesEnabled(true);
+                }
                 mainActivity.getFragmentManager().popBackStack();
             }
         });
@@ -71,9 +74,19 @@ public class ReportTaxiFragment extends Fragment {
 
                 final DatabaseReference reportIdRef = mainActivity.getDatabase().getReference().child("Reports");
 
+                if(isEmpty(address)){
+                    return;
+                }
                 report.setStreetname(address);
-                report.setOccupancy(Integer.parseInt(taxiPlaceCount));
-                report.setTimeframe(timeframe+" - " + timeframe2);
+                if(!isEmpty(taxiPlaceCount)) {
+                    report.setOccupancy(Integer.parseInt(taxiPlaceCount));
+                }
+                String finalTimeframe = isEmpty(timeframe) ? "" : timeframe;
+                finalTimeframe += isEmpty(finalTimeframe) ? (isEmpty(timeframe2) ? "" : timeframe2) : (isEmpty(timeframe2) ? "" : " - " + timeframe2);
+
+                if(!isEmpty(finalTimeframe)) {
+                    report.setTimeframe(finalTimeframe);
+                }
 
                 reportIdRef.push().setValue(report);
 
@@ -88,5 +101,9 @@ public class ReportTaxiFragment extends Fragment {
 
         return view;
 
+    }
+
+    private boolean isEmpty(String val){
+        return val == null || val.isEmpty();
     }
 }
