@@ -17,7 +17,7 @@ public class GoogleClient {
     private RequestQueue requestQueue;
 
     private GoogleClient(Context ctx){
-        this.ctx = ctx;
+        GoogleClient.ctx = ctx;
         requestQueue = getRequestQueue();
     }
 

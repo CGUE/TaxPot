@@ -31,6 +31,7 @@
     <string name="finish">Fertig</string>
 
     <string name="rating_submitted">Ihre Bewertung wurde abgegeben. Danke!</string>
+    <string name="rating_not_submitted">Ihre Bewertung konnte nicht abgegeben werden.</string>
     <string name="taxi_reported">Der Taxistand wurde gemeldet. Danke!</string>
 
     <string name="report_title">Neuen Taxistand Melden</string>
@@ -43,6 +44,8 @@
     <string name="default_val">keine Daten vorhanden</string>
     <string name="null_value">null</string>
 
+    <string name="internet_connection_lost">Es konnte keine Verbindung zum Netzwerk hergestellt werden</string>
+    <string name="close_txt">Schließen</string>
     <string name="no_permission">Um diese App verwenden zu können, muss die App auf Ihre Standortdaten zugreifen dürfen.</string>
     <string name="on_request_fail_message">Es ist leider ein Fehler aufgetreten.</string>
     <string name="google_directions_url">https://maps.googleapis.com/maps/api/directions/json?</string>

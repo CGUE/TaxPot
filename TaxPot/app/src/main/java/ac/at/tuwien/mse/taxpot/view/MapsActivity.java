@@ -1,33 +1,29 @@
 package ac.at.tuwien.mse.taxpot.view;
 
 import android.Manifest;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.pm.PackageManager;
-import android.databinding.DataBindingUtil;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,12 +39,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
@@ -73,7 +66,7 @@ import ac.at.tuwien.mse.taxpot.view.CustomCluster.CustomClusterRenderer;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks,
-        ActivityCompat.OnRequestPermissionsResultCallback{
+        ActivityCompat.OnRequestPermissionsResultCallback {
     private final String TAG = "TaxPot";
     private GoogleApiClient googleApiClient;
 
@@ -83,12 +76,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FloatingSearchView searchBar;
 
     private FirebaseDatabase database;
+    private boolean connected;
 
     private ClusterManager<TaxPot> taxPotClusterManager;
     private ArrayList<TaxPot> allTaxPots;
     private Location currentLocation;
     private FloatingActionButton myLocationButton;
-
 
 
     @Override
@@ -112,7 +105,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return database;
     }
 
-    public void initializeMap(){
+    public void initializeMap() {
 
         // establish connection with google services
         googleApiClient = new GoogleApiClient.Builder(this)
@@ -149,7 +142,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.getUiSettings().setMapToolbarEnabled(false);
-        mMap.setMyLocationEnabled(true);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            mMap.setMyLocationEnabled(true);
+        }
         myLocationButton = (FloatingActionButton) findViewById(R.id.my_location_button);
         myLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,7 +154,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (mMap == null)
                     return;
 
-                currentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    currentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+                }
                 if (currentLocation == null) {
                     Log.d(TAG, "currentLocation not found!");
                     return;
@@ -198,7 +198,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), R.string.on_request_fail_message + ": " + error.getMessage(), Toast.LENGTH_LONG).show();
+
+                View v = findViewById(R.id.root_view);
+                final Snackbar snackbar = Snackbar.make(v, getString(R.string.internet_connection_lost), Snackbar.LENGTH_INDEFINITE);
+                snackbar.setAction(R.string.close_txt, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        snackbar.dismiss();
+                    }
+                }).show();
             }
         });
 
@@ -211,7 +219,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnCameraIdleListener(taxPotClusterManager);
     }
 
-    public GoogleMap getmMap(){
+    public GoogleMap getmMap() {
         return mMap;
     }
 
@@ -238,7 +246,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             if (latLngInfo != null)
                 spot.setLatitude(latLngInfo.getDouble(1));
-                spot.setLongitude(latLngInfo.getDouble(0));
+            spot.setLongitude(latLngInfo.getDouble(0));
 
             if (properties.get("ZEITRAUM") != null)
                 spot.setServiceTime(properties.getString("ZEITRAUM"));
@@ -291,7 +299,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        currentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            currentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        }
         if(currentLocation != null) {
             LatLng current = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
@@ -300,7 +312,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        Log.d(TAG, "supended entered"); View v = findViewById(R.id.root_view);
+        final Snackbar snackbar = Snackbar.make(v, getString(R.string.internet_connection_lost), Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction(R.string.close_txt, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        }).show();
     }
 
     public void onMenuListened(MenuItem item) {

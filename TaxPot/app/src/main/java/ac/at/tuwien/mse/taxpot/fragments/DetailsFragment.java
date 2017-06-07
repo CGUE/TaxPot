@@ -12,13 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.maps.model.LatLng;
-
-import java.util.Map;
 
 import ac.at.tuwien.mse.taxpot.R;
 import ac.at.tuwien.mse.taxpot.databinding.LayoutMarkerdetailsBinding;
@@ -41,14 +34,14 @@ public class DetailsFragment extends Fragment {
         binding.setTaxpot(taxPot);
 
         final MapsActivity mainActivity = (MapsActivity) getActivity();
-        if(mainActivity.getmMap() != null){
+        if (mainActivity.getmMap() != null) {
             mainActivity.getmMap().getUiSettings().setAllGesturesEnabled(false);
         }
-        if(mainActivity.getMyLocationButton() != null) {
+        if (mainActivity.getMyLocationButton() != null) {
             mainActivity.getMyLocationButton().hide();
         }
 
-        binding.rlDetails.setOnClickListener(new View.OnClickListener(){
+        binding.rlDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("TaxPot", "outside Details Layout touched!");
@@ -59,10 +52,10 @@ public class DetailsFragment extends Fragment {
         binding.navigationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String q = "q="+taxPot.getLatitude()+","+taxPot.getLongitude();
+                String q = "q=" + taxPot.getLatitude() + "," + taxPot.getLongitude();
                 q += "&mode=w";
-                Log.d("TaxPot", getString(R.string.google_navigation_url)+q);
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_navigation_url)+q));
+                Log.d("TaxPot", getString(R.string.google_navigation_url) + q);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_navigation_url) + q));
                 intent.setPackage("com.google.android.apps.maps");
                 startActivity(intent);
             }
@@ -118,16 +111,16 @@ public class DetailsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         MapsActivity mainActivity = (MapsActivity) getActivity();
-        if(mainActivity.getmMap() != null){
+        if (mainActivity.getmMap() != null) {
             mainActivity.getmMap().getUiSettings().setAllGesturesEnabled(true);
         }
-        if(mainActivity.getMyLocationButton() != null){
+        if (mainActivity.getMyLocationButton() != null) {
             mainActivity.getMyLocationButton().show();
         }
     }
 
-    public void OnDurationCalculatedCallback(String duration){
-        if(taxPot != null){
+    public void OnDurationCalculatedCallback(String duration) {
+        if (taxPot != null) {
             taxPot.setDuration(duration);
         }
     }
